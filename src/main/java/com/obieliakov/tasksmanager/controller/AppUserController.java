@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.annotation.PostConstruct;
 
 @RestController
-@RequestMapping(value = "/api/users")
+@RequestMapping(value = "/users")
 @AllArgsConstructor
 public class AppUserController {
 
@@ -18,7 +18,6 @@ public class AppUserController {
     public void init() {
         System.out.println("AppUserController initialized with" + appUserService);
     }
-
 
 
 }
