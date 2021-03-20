@@ -4,7 +4,7 @@ import com.obieliakov.tasksmanager.dto.AppUserDto;
 
 import java.util.Optional;
 
-public interface IAppUserService {
+public interface AppUserService {
     Optional<AppUserDto> findById(Long id);
 
     AppUserDto save(AppUserDto foo);

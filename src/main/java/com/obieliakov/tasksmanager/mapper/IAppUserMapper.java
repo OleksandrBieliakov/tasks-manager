@@ -8,4 +8,6 @@ import org.mapstruct.Mapper;
 public interface IAppUserMapper {
 
     AppUserDto appUserToAppUserDto(AppUser appUser);
+
+    AppUser appUserDtoToAppUser(AppUserDto appUserDto);
 }
