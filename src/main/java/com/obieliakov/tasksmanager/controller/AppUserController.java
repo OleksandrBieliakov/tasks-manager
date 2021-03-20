@@ -20,5 +20,5 @@ public class AppUserController {
     public void init() {
         System.out.println("AppUserController initialized with" + appUserService);
     }
-    
+
 }
