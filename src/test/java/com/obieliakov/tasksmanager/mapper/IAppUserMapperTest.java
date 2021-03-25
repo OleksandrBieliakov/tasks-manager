@@ -2,7 +2,6 @@ package com.obieliakov.tasksmanager.mapper;
 
 import com.obieliakov.tasksmanager.dto.AppUserDto;
 import com.obieliakov.tasksmanager.model.AppUser;
-import com.obieliakov.tasksmanager.repository.AppUserRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -13,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class IAppUserMapperTest {
 
     @Autowired
-    IAppUserMapper appUserMapper;
+    private IAppUserMapper appUserMapper;
 
     @Test
     void appUserToAppUserDto() {
@@ -33,21 +32,5 @@ class IAppUserMapperTest {
         AppUser appUser = appUserMapper.appUserDtoToAppUser(appUserDto);
         assertEquals(2, appUser.getId());
         assertEquals("Bill", appUser.getLoginName());
-    }
-
-    //TODO delete or move to appUserRepository test class
-    @Autowired
-    AppUserRepository appUserRepository;
-
-    @Test
-    void appUserCreation() {
-        AppUser bob = new AppUser();
-        bob.setLoginName("Bob");
-        appUserRepository.save(bob);
-        AppUser mike = new AppUser();
-        mike.setLoginName("Mike");
-        appUserRepository.save(mike);
-        assertEquals(2L, appUserRepository.count());
-        //fail();
     }
 }
