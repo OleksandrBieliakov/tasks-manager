@@ -17,7 +17,7 @@ class GroupRepositoryTest {
 
     private static final String TAG = "GroupRepositoryTest";
     private static final int ENUMERATE_FROM = 1;
-    private static final int NUMBER_OF_GROUPS = 2;
+    private static final int NUMBER_OF_GROUPS = 1;
 
     @Autowired
     private GroupsLoader groupsLoader;
@@ -40,7 +40,7 @@ class GroupRepositoryTest {
 
     @Test
     void findByName() {
-        String name = TAG + GroupsLoader.GROUP_NAME + ENUMERATE_FROM;
+        String name = groupsLoader.format(TAG, GroupsLoader.GROUP_NAME, ENUMERATE_FROM);
         Group group = groupRepository.findByName(name);
         assertNotNull(group);
         assertEquals(name, group.getName());
