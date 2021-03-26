@@ -18,6 +18,6 @@ public class GroupMembershipServiceImpl implements GroupMembershipService {
 
     @Override
     public List<AppUserShortDto> listAppUsersShortByGroupID(Long groupId) {
-        return groupMembershipRepository.queryAppUsersShortByGroupId(groupId);
+        return groupMembershipRepository.queryAppUsersShortUsingGroupId(groupId);
     }
 }

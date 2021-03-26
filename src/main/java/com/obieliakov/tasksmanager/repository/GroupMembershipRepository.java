@@ -11,6 +11,8 @@ import java.util.List;
 public interface GroupMembershipRepository extends PagingAndSortingRepository<GroupMembership, Long> {
 
     @Query("select new com.obieliakov.tasksmanager.dto.AppUserShortDto(u.id, u.loginName, u.firstName, u.lastName) " +
-            "from AppUser u join GroupMembership gm on gm.user = u where gm.group.id = :group_id")
-    List<AppUserShortDto> queryAppUsersShortByGroupId(@Param("group_id") Long groupId);
+            "from GroupMembership gm join gm.user u where gm.group.id = :group_id")
+    List<AppUserShortDto> queryAppUsersShortUsingGroupId(@Param("group_id") Long groupId);
+
+    //TODO select gm.user from GroupMembership gm where gm.group.id = 1
 }
