@@ -2,12 +2,14 @@ package com.obieliakov.tasksmanager.service;
 
 import com.obieliakov.tasksmanager.dto.AppUserDto;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface AppUserService {
+
     Optional<AppUserDto> findById(Long id);
 
-    AppUserDto save(AppUserDto foo);
+    AppUserDto save(AppUserDto appUserDto);
 
-    Iterable<AppUserDto> findAll();
+    List<AppUserDto> findAll();
 }

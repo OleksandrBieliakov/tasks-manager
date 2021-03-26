@@ -9,10 +9,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
-class IAppUserMapperTest {
+class AppUserMapperTest {
 
     @Autowired
-    private IAppUserMapper appUserMapper;
+    private AppUserMapper appUserMapper;
 
     @Test
     void appUserToAppUserDto() {

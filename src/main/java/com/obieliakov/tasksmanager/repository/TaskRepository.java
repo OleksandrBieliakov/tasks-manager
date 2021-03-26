@@ -1,7 +1,7 @@
 package com.obieliakov.tasksmanager.repository;
 
 import com.obieliakov.tasksmanager.model.Task;
-import org.springframework.data.repository.PagingAndSortingRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface TaskRepository extends PagingAndSortingRepository<Task, Long> {
+public interface TaskRepository extends JpaRepository<Task, Long> {
 }

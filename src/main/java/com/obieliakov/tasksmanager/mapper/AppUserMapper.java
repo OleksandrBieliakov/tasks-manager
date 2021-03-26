@@ -5,7 +5,7 @@ import com.obieliakov.tasksmanager.model.AppUser;
 import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")
-public interface IAppUserMapper {
+public interface AppUserMapper {
 
     AppUserDto appUserToAppUserDto(AppUser appUser);
 
