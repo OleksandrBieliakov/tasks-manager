@@ -1,6 +1,7 @@
 package com.obieliakov.tasksmanager.service.impl;
 
 import com.obieliakov.tasksmanager.dto.AppUserDto;
+import com.obieliakov.tasksmanager.dto.AppUserShortDto;
 import com.obieliakov.tasksmanager.mapper.AppUserMapper;
 import com.obieliakov.tasksmanager.model.AppUser;
 import com.obieliakov.tasksmanager.repository.AppUserRepository;
@@ -9,7 +10,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class AppUserServiceImpl implements AppUserService {
@@ -37,8 +37,17 @@ public class AppUserServiceImpl implements AppUserService {
     @Override
     public List<AppUserDto> findAll() {
         List<AppUser> appUsers = appUserRepository.findAll();
-        return appUsers.stream().
-                map(appUserMapper::appUserToAppUserDto).
-                collect(Collectors.toList());
+        return appUserMapper.appUserToAppUserDtoList(appUsers);
+    }
+
+    @Override
+    public List<AppUserDto> getAppUsersWithMembershipInGroupWithId(Long id) {
+        List<AppUser> appUsers = appUserRepository.queryAppUsersWithMembershipInGroupWithId(id);
+        return appUserMapper.appUserToAppUserDtoList(appUsers);
+    }
+
+    @Override
+    public List<AppUserShortDto> listAppUsersShortMembersOfGroupWithId(Long groupId) {
+        return appUserRepository.queryAppUsersShortMembersOfGroupWithId(groupId);
     }
 }

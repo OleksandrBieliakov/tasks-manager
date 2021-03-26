@@ -1,6 +1,7 @@
 package com.obieliakov.tasksmanager.controller;
 
 import com.obieliakov.tasksmanager.dto.AppUserDto;
+import com.obieliakov.tasksmanager.dto.AppUserShortDto;
 import com.obieliakov.tasksmanager.service.AppUserService;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,14 +23,24 @@ public class AppUserController {
         return appUserService.findById(id);
     }
 
+    //TODO split into different mappings properly
     @RequestMapping(method = {RequestMethod.POST, RequestMethod.PUT, RequestMethod.PATCH})
     public AppUserDto saveUser(@RequestBody AppUserDto appUserDto) {
-        System.out.println(appUserDto);
         return appUserService.save(appUserDto);
     }
 
     @GetMapping("/all")
     public List<AppUserDto> allUsers() {
         return appUserService.findAll();
+    }
+
+    @GetMapping("/members-of-group/{groupId}")
+    public List<AppUserDto> membersOfGroup(@PathVariable Long groupId) {
+        return appUserService.getAppUsersWithMembershipInGroupWithId(groupId);
+    }
+
+    @GetMapping("/members-of-group/{groupId}/short")
+    public List<AppUserShortDto> membersOfGroupShort(@PathVariable Long groupId) {
+        return appUserService.listAppUsersShortMembersOfGroupWithId(groupId);
     }
 }
