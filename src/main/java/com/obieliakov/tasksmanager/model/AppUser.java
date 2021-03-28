@@ -16,17 +16,20 @@ import java.util.Set;
 @ToString
 public class AppUser {
 
+    public static final int NAMES_MIN_LENGTH = 1;
+    public static final int NAMES_MAX_LENGTH = 50;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "login_name", nullable = false)
+    @Column(name = "login_name", nullable = false, length = NAMES_MAX_LENGTH)
     private String loginName;
 
-    @Column(name = "first_name")
+    @Column(name = "first_name", length = NAMES_MAX_LENGTH)
     private String firstName;
 
-    @Column(name = "last_name")
+    @Column(name = "last_name", length = NAMES_MAX_LENGTH)
     private String lastName;
 
     @Column(name = "time_registered", nullable = false)

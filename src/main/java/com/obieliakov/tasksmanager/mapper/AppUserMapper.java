@@ -1,6 +1,7 @@
 package com.obieliakov.tasksmanager.mapper;
 
 import com.obieliakov.tasksmanager.dto.AppUserDto;
+import com.obieliakov.tasksmanager.dto.NewAppUserDto;
 import com.obieliakov.tasksmanager.model.AppUser;
 import org.mapstruct.Mapper;
 
@@ -16,4 +17,6 @@ public interface AppUserMapper {
     List<AppUserDto> appUserToAppUserDtoList(List<AppUser> appUserList);
 
     List<AppUser> appUserDtoToAppUserList(List<AppUserDto> appUserList);
+
+    AppUser newAppUserDtoToAppUser(NewAppUserDto newAppUserDto);
 }

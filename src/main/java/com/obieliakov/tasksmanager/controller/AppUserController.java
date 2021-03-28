@@ -2,11 +2,12 @@ package com.obieliakov.tasksmanager.controller;
 
 import com.obieliakov.tasksmanager.dto.AppUserDto;
 import com.obieliakov.tasksmanager.dto.AppUserShortDto;
+import com.obieliakov.tasksmanager.dto.NewAppUserDto;
+import com.obieliakov.tasksmanager.dto.UpdatedAppUserInfoDto;
 import com.obieliakov.tasksmanager.service.AppUserService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping(value = "/users")
@@ -19,14 +20,23 @@ public class AppUserController {
     }
 
     @GetMapping("/{id}")
-    public Optional<AppUserDto> userById(@PathVariable Long id) {
+    public AppUserDto userById(@PathVariable Long id) {
         return appUserService.findById(id);
     }
 
-    //TODO split into different mappings properly
-    @RequestMapping(method = {RequestMethod.POST, RequestMethod.PUT, RequestMethod.PATCH})
-    public AppUserDto saveUser(@RequestBody AppUserDto appUserDto) {
-        return appUserService.save(appUserDto);
+    @GetMapping("/{loginName}")
+    public AppUserDto userByLoginName(@PathVariable String loginName) {
+        return appUserService.findByLoginName(loginName);
+    }
+
+    @PostMapping
+    public AppUserDto createUser(@RequestBody NewAppUserDto newAppUserDto) {
+        return appUserService.createUser(newAppUserDto);
+    }
+
+    @PatchMapping
+    public AppUserDto updateUserInfo(@RequestBody UpdatedAppUserInfoDto updatedAppUserInfoDto) {
+        return appUserService.updateUserInfo(updatedAppUserInfoDto);
     }
 
     @GetMapping("/all")
@@ -34,11 +44,13 @@ public class AppUserController {
         return appUserService.findAll();
     }
 
+    // added to practice custom hql query creation, better use some Group DTO
     @GetMapping("/members-of-group/{groupId}")
     public List<AppUserDto> membersOfGroup(@PathVariable Long groupId) {
         return appUserService.getAppUsersWithMembershipInGroupWithId(groupId);
     }
 
+    // added to practice custom hql query creation with projection, better use some Group DTO
     @GetMapping("/members-of-group/{groupId}/short")
     public List<AppUserShortDto> membersOfGroupShort(@PathVariable Long groupId) {
         return appUserService.listAppUsersShortMembersOfGroupWithId(groupId);
