@@ -1,4 +1,4 @@
-package com.obieliakov.tasksmanager.dto;
+package com.obieliakov.tasksmanager.dto.appUser;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

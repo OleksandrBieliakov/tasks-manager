@@ -1,5 +1,6 @@
 package com.obieliakov.tasksmanager.dto;
 
+import com.obieliakov.tasksmanager.dto.appUser.AppUserShortDto;
 import com.obieliakov.tasksmanager.model.TaskStatus;
 import lombok.AllArgsConstructor;
 import lombok.Data;

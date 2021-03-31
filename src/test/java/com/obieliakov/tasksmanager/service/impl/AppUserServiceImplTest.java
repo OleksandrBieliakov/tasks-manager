@@ -1,6 +1,6 @@
 package com.obieliakov.tasksmanager.service.impl;
 
-import com.obieliakov.tasksmanager.dto.NewAppUserDto;
+import com.obieliakov.tasksmanager.dto.appUser.NewAppUserDto;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

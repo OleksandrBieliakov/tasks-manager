@@ -1,9 +1,9 @@
 package com.obieliakov.tasksmanager.controller;
 
-import com.obieliakov.tasksmanager.dto.AppUserDto;
-import com.obieliakov.tasksmanager.dto.AppUserShortDto;
-import com.obieliakov.tasksmanager.dto.NewAppUserDto;
-import com.obieliakov.tasksmanager.dto.UpdatedAppUserInfoDto;
+import com.obieliakov.tasksmanager.dto.appUser.AppUserDto;
+import com.obieliakov.tasksmanager.dto.appUser.AppUserShortDto;
+import com.obieliakov.tasksmanager.dto.appUser.NewAppUserDto;
+import com.obieliakov.tasksmanager.dto.appUser.UpdatedAppUserInfoDto;
 import com.obieliakov.tasksmanager.service.AppUserService;
 import org.springframework.web.bind.annotation.*;
 
