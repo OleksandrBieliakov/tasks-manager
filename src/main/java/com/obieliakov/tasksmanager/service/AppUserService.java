@@ -15,7 +15,7 @@ public interface AppUserService {
 
     AppUserDto createUser(NewAppUserDto newAppUserDto);
 
-    AppUserDto updateUserInfo(UpdatedAppUserInfoDto updatedAppUserInfoDto);
+    AppUserDto updateUserInfo(Long userid, UpdatedAppUserInfoDto updatedAppUserInfoDto);
 
     List<AppUserDto> findAll();
 

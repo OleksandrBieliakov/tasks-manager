@@ -108,6 +108,14 @@
 			<version>2.4.4</version>
 		</dependency>
 
+
+		<!-- To use go to: http://localhost:8080/swagger-ui.html -->
+		<dependency>
+			<groupId>org.springdoc</groupId>
+			<artifactId>springdoc-openapi-ui</artifactId>
+			<version>1.5.6</version>
+		</dependency>
+
 	</dependencies>
 
 	<build>

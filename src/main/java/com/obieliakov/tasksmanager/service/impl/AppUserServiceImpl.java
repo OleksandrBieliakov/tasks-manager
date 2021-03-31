@@ -65,6 +65,7 @@ public class AppUserServiceImpl implements AppUserService {
         String loginName = newAppUserDto.getLoginName();
         Optional<AppUser> appUserOptional = appUserRepository.findAppUserByLoginName(loginName);
         if (appUserOptional.isPresent()) {
+            //TODO add proper handling
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Login name is used by another user");
         }
 
@@ -74,7 +75,7 @@ public class AppUserServiceImpl implements AppUserService {
 
     //TODO make transactional ?
     @Override
-    public AppUserDto updateUserInfo(UpdatedAppUserInfoDto updatedAppUserInfoDto) {
+    public AppUserDto updateUserInfo(Long userId, UpdatedAppUserInfoDto updatedAppUserInfoDto) {
         updatedAppUserInfoDto.trim();
 
         Set<ConstraintViolation<UpdatedAppUserInfoDto>> violations = validator.validate(updatedAppUserInfoDto);
@@ -82,9 +83,9 @@ public class AppUserServiceImpl implements AppUserService {
             throw new ConstraintViolationException(violations);
         }
 
-        Long id = updatedAppUserInfoDto.getId();
-        Optional<AppUser> existingAppUserOptional = appUserRepository.findById(id);
+        Optional<AppUser> existingAppUserOptional = appUserRepository.findById(userId);
         if (existingAppUserOptional.isEmpty()) {
+            //TODO add proper handling
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User with such id not found");
         }
         AppUser existingAppUser = existingAppUserOptional.get();

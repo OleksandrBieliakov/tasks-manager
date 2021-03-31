@@ -24,7 +24,7 @@ public class AppUserController {
         return appUserService.findById(id);
     }
 
-    @GetMapping("/{loginName}")
+    @GetMapping("login-name/{loginName}")
     public AppUserDto userByLoginName(@PathVariable String loginName) {
         return appUserService.findByLoginName(loginName);
     }
@@ -34,12 +34,12 @@ public class AppUserController {
         return appUserService.createUser(newAppUserDto);
     }
 
-    @PatchMapping
-    public AppUserDto updateUserInfo(@RequestBody UpdatedAppUserInfoDto updatedAppUserInfoDto) {
-        return appUserService.updateUserInfo(updatedAppUserInfoDto);
+    @PatchMapping("/{id}")
+    public AppUserDto updateUserInfo(@PathVariable Long id, @RequestBody UpdatedAppUserInfoDto updatedAppUserInfoDto) {
+        return appUserService.updateUserInfo(id, updatedAppUserInfoDto);
     }
 
-    @GetMapping("/all")
+    @GetMapping
     public List<AppUserDto> allUsers() {
         return appUserService.findAll();
     }

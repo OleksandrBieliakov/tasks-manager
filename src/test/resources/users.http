@@ -1,0 +1,9 @@
+### all fields invalid
+POST http://localhost:8080/users/
+Content-Type: application/json
+
+{
+  "loginName": null,
+  "firstName": "       ",
+  "lastName": "over 50 chars aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+}
