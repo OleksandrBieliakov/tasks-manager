@@ -1,4 +1,4 @@
-package com.obieliakov.tasksmanager.dto;
+package com.obieliakov.tasksmanager.dto.task;
 
 import com.obieliakov.tasksmanager.dto.appUser.AppUserShortDto;
 import com.obieliakov.tasksmanager.model.TaskStatus;
@@ -20,4 +20,9 @@ public class TaskShortDto {
     private String title;
     private TaskStatus status;
     private Set<AppUserShortDto> assignedTo;
+
+    public TaskShortDto(Long id, String title) {
+        this.id = id;
+        this.title = title;
+    }
 }

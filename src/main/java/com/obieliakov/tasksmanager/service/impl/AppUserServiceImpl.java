@@ -10,6 +10,7 @@ import com.obieliakov.tasksmanager.repository.AppUserRepository;
 import com.obieliakov.tasksmanager.service.AppUserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -52,7 +53,7 @@ public class AppUserServiceImpl implements AppUserService {
         return appUserMapper.appUserToAppUserDto(appUser.get());
     }
 
-    //TODO make transactional ?
+    @Transactional
     @Override
     public AppUserDto createUser(NewAppUserDto newAppUserDto) {
         newAppUserDto.trim();
@@ -65,7 +66,6 @@ public class AppUserServiceImpl implements AppUserService {
         String loginName = newAppUserDto.getLoginName();
         Optional<AppUser> appUserOptional = appUserRepository.findAppUserByLoginName(loginName);
         if (appUserOptional.isPresent()) {
-            //TODO add proper handling
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Login name is used by another user");
         }
 
@@ -73,7 +73,7 @@ public class AppUserServiceImpl implements AppUserService {
         return appUserMapper.appUserToAppUserDto(createdAppUser);
     }
 
-    //TODO make transactional ?
+    @Transactional
     @Override
     public AppUserDto updateUserInfo(Long userId, UpdatedAppUserInfoDto updatedAppUserInfoDto) {
         updatedAppUserInfoDto.trim();
@@ -85,7 +85,6 @@ public class AppUserServiceImpl implements AppUserService {
 
         Optional<AppUser> existingAppUserOptional = appUserRepository.findById(userId);
         if (existingAppUserOptional.isEmpty()) {
-            //TODO add proper handling
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User with such id not found");
         }
         AppUser existingAppUser = existingAppUserOptional.get();
