@@ -1,9 +1,8 @@
 package com.obieliakov.tasksmanager.service.impl;
 
 import com.obieliakov.tasksmanager.dto.appUser.AppUserDto;
-import com.obieliakov.tasksmanager.dto.appUser.AppUserShortDto;
 import com.obieliakov.tasksmanager.dto.appUser.NewAppUserDto;
-import com.obieliakov.tasksmanager.dto.appUser.UpdatedAppUserInfoDto;
+import com.obieliakov.tasksmanager.dto.appUser.UpdateAppUserInfoDto;
 import com.obieliakov.tasksmanager.mapper.AppUserMapper;
 import com.obieliakov.tasksmanager.model.AppUser;
 import com.obieliakov.tasksmanager.repository.AppUserRepository;
@@ -11,7 +10,6 @@ import com.obieliakov.tasksmanager.service.AppUserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.ConstraintViolation;
@@ -22,12 +20,15 @@ import java.util.Optional;
 import java.util.Set;
 
 @Service
-@Validated
+@Transactional
+//@Validated // needed to validate functions parameters annotated with @Valid
 public class AppUserServiceImpl implements AppUserService {
 
-    private final AppUserRepository appUserRepository;
-    private final AppUserMapper appUserMapper;
     private final Validator validator;
+
+    private final AppUserMapper appUserMapper;
+
+    private final AppUserRepository appUserRepository;
 
     public AppUserServiceImpl(AppUserRepository appUserRepository, AppUserMapper appUserMapper, Validator validator) {
         this.appUserRepository = appUserRepository;
@@ -35,27 +36,36 @@ public class AppUserServiceImpl implements AppUserService {
         this.validator = validator;
     }
 
-    @Override
-    public AppUserDto findById(Long id) {
+    private AppUser appUserModelById(Long id) {
         Optional<AppUser> appUser = appUserRepository.findById(id);
         if (appUser.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
         }
-        return appUserMapper.appUserToAppUserDto(appUser.get());
+        return appUser.get();
     }
 
-    @Override
-    public AppUserDto findByLoginName(String loginName) {
-        Optional<AppUser> appUser = appUserRepository.findAppUserByLoginName(loginName);
+    private AppUser appUserModelByLoginName(String loginName) {
+        Optional<AppUser> appUser = appUserRepository.findByLoginName(loginName);
         if (appUser.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
         }
-        return appUserMapper.appUserToAppUserDto(appUser.get());
+        return appUser.get();
     }
 
-    @Transactional
     @Override
-    public AppUserDto createUser(NewAppUserDto newAppUserDto) {
+    public AppUserDto appUserById(Long id) {
+        AppUser appUser = appUserModelById(id);
+        return appUserMapper.appUserToAppUserDto(appUser);
+    }
+
+    @Override
+    public AppUserDto appUserByLoginName(String loginName) {
+        AppUser appUser = appUserModelByLoginName(loginName);
+        return appUserMapper.appUserToAppUserDto(appUser);
+    }
+
+    @Override
+    public AppUserDto createAppUser(NewAppUserDto newAppUserDto) {
         newAppUserDto.trim();
 
         Set<ConstraintViolation<NewAppUserDto>> violations = validator.validate(newAppUserDto);
@@ -63,55 +73,38 @@ public class AppUserServiceImpl implements AppUserService {
             throw new ConstraintViolationException(violations);
         }
 
-        String loginName = newAppUserDto.getLoginName();
-        Optional<AppUser> appUserOptional = appUserRepository.findAppUserByLoginName(loginName);
+        Optional<AppUser> appUserOptional = appUserRepository.findByLoginName(newAppUserDto.getLoginName());
         if (appUserOptional.isPresent()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Login name is used by another user");
         }
 
-        AppUser createdAppUser = appUserRepository.save(appUserMapper.newAppUserDtoToAppUser(newAppUserDto));
+        AppUser newAppUser = appUserMapper.newAppUserDtoToAppUser(newAppUserDto);
+
+        AppUser createdAppUser = appUserRepository.save(newAppUser);
         return appUserMapper.appUserToAppUserDto(createdAppUser);
     }
 
-    @Transactional
     @Override
-    public AppUserDto updateUserInfo(Long userId, UpdatedAppUserInfoDto updatedAppUserInfoDto) {
-        updatedAppUserInfoDto.trim();
+    public AppUserDto updateAppUserInfo(Long id, UpdateAppUserInfoDto updateAppUserInfoDto) {
+        updateAppUserInfoDto.trim();
 
-        Set<ConstraintViolation<UpdatedAppUserInfoDto>> violations = validator.validate(updatedAppUserInfoDto);
+        Set<ConstraintViolation<UpdateAppUserInfoDto>> violations = validator.validate(updateAppUserInfoDto);
         if (!violations.isEmpty()) {
             throw new ConstraintViolationException(violations);
         }
 
-        Optional<AppUser> existingAppUserOptional = appUserRepository.findById(userId);
-        if (existingAppUserOptional.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User with such id not found");
-        }
-        AppUser existingAppUser = existingAppUserOptional.get();
+        AppUser existingAppUser = appUserModelById(id);
 
-        existingAppUser.setFirstName(updatedAppUserInfoDto.getFirstName());
-        existingAppUser.setLastName(updatedAppUserInfoDto.getLastName());
+        existingAppUser.setFirstName(updateAppUserInfoDto.getFirstName());
+        existingAppUser.setLastName(updateAppUserInfoDto.getLastName());
 
         AppUser updatedAppUser = appUserRepository.save(existingAppUser);
         return appUserMapper.appUserToAppUserDto(updatedAppUser);
     }
 
     @Override
-    public List<AppUserDto> findAll() {
+    public List<AppUserDto> allAppUsers() {
         List<AppUser> appUsers = appUserRepository.findAll();
-        return appUserMapper.appUserToAppUserDtoList(appUsers);
-    }
-
-    // added to practice custom hql query creation, better use some Group DTO
-    @Override
-    public List<AppUserDto> getAppUsersWithMembershipInGroupWithId(Long id) {
-        List<AppUser> appUsers = appUserRepository.queryAppUsersWithMembershipInGroupWithId(id);
-        return appUserMapper.appUserToAppUserDtoList(appUsers);
-    }
-
-    // added to practice custom hql query creation with projection better use some Group DTO
-    @Override
-    public List<AppUserShortDto> listAppUsersShortMembersOfGroupWithId(Long groupId) {
-        return appUserRepository.queryAppUsersShortMembersOfGroupWithId(groupId);
+        return appUserMapper.appUserListToAppUserDtoList(appUsers);
     }
 }

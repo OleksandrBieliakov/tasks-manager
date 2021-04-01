@@ -1,9 +1,8 @@
 package com.obieliakov.tasksmanager.controller;
 
 import com.obieliakov.tasksmanager.dto.appUser.AppUserDto;
-import com.obieliakov.tasksmanager.dto.appUser.AppUserShortDto;
 import com.obieliakov.tasksmanager.dto.appUser.NewAppUserDto;
-import com.obieliakov.tasksmanager.dto.appUser.UpdatedAppUserInfoDto;
+import com.obieliakov.tasksmanager.dto.appUser.UpdateAppUserInfoDto;
 import com.obieliakov.tasksmanager.service.AppUserService;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,39 +19,27 @@ public class AppUserController {
     }
 
     @GetMapping("/{id}")
-    public AppUserDto userById(@PathVariable Long id) {
-        return appUserService.findById(id);
+    public AppUserDto appUserById(@PathVariable Long id) {
+        return appUserService.appUserById(id);
     }
 
     @GetMapping("login-name/{loginName}")
-    public AppUserDto userByLoginName(@PathVariable String loginName) {
-        return appUserService.findByLoginName(loginName);
+    public AppUserDto appUserByLoginName(@PathVariable String loginName) {
+        return appUserService.appUserByLoginName(loginName);
     }
 
     @PostMapping
-    public AppUserDto createUser(@RequestBody NewAppUserDto newAppUserDto) {
-        return appUserService.createUser(newAppUserDto);
+    public AppUserDto createAppUser(@RequestBody NewAppUserDto newAppUserDto) {
+        return appUserService.createAppUser(newAppUserDto);
     }
 
     @PatchMapping("/{id}")
-    public AppUserDto updateUserInfo(@PathVariable Long id, @RequestBody UpdatedAppUserInfoDto updatedAppUserInfoDto) {
-        return appUserService.updateUserInfo(id, updatedAppUserInfoDto);
+    public AppUserDto updateAppUserInfo(@PathVariable Long id, @RequestBody UpdateAppUserInfoDto updateAppUserInfoDto) {
+        return appUserService.updateAppUserInfo(id, updateAppUserInfoDto);
     }
 
     @GetMapping
-    public List<AppUserDto> allUsers() {
-        return appUserService.findAll();
-    }
-
-    // added to practice custom hql query creation, better use some Group DTO
-    @GetMapping("/members-of-group/{groupId}")
-    public List<AppUserDto> membersOfGroup(@PathVariable Long groupId) {
-        return appUserService.getAppUsersWithMembershipInGroupWithId(groupId);
-    }
-
-    // added to practice custom hql query creation with projection, better use some Group DTO
-    @GetMapping("/members-of-group/{groupId}/short")
-    public List<AppUserShortDto> membersOfGroupShort(@PathVariable Long groupId) {
-        return appUserService.listAppUsersShortMembersOfGroupWithId(groupId);
+    public List<AppUserDto> allAppUsers() {
+        return appUserService.allAppUsers();
     }
 }

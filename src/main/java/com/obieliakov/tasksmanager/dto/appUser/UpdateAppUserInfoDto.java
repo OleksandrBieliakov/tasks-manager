@@ -8,7 +8,7 @@ import javax.validation.constraints.Size;
 
 @Data
 @ToString
-public class UpdatedAppUserInfoDto {
+public class UpdateAppUserInfoDto {
 
     @Size(min = AppUser.NAMES_MIN_LENGTH, max = AppUser.NAMES_MAX_LENGTH)
     private String firstName;

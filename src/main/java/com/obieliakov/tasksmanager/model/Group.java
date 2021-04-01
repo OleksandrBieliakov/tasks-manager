@@ -13,11 +13,14 @@ import java.util.Set;
 @ToString
 public class Group {
 
+    public static final int NAME_MIN_LENGTH = 1;
+    public static final int NAME_MAX_LENGTH = 100;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "g_name", nullable = false)
+    @Column(name = "g_name", nullable = false, length = NAME_MAX_LENGTH)
     private String name;
 
     @Column(name = "time_created", nullable = false)

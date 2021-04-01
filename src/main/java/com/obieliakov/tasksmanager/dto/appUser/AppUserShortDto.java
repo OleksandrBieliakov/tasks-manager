@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+// added to practice custom hql query creation with projection to AppUserShortDto
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

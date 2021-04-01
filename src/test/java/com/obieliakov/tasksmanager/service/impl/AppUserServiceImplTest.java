@@ -30,7 +30,7 @@ class AppUserServiceImplTest {
             NewAppUserDto appUserDto = new NewAppUserDto();
             appUserDto.setLoginName(tooShortLonginName);
             assertThrows(ConstraintViolationException.class, () -> {
-                appUserService.createUser(appUserDto);
+                appUserService.createAppUser(appUserDto);
             });
         }
 
@@ -39,14 +39,14 @@ class AppUserServiceImplTest {
             NewAppUserDto appUserDto = new NewAppUserDto();
             appUserDto.setLoginName(tooLongLoginName);
             assertThrows(ConstraintViolationException.class, () -> {
-                appUserService.createUser(appUserDto);
+                appUserService.createAppUser(appUserDto);
             });
         }
 
         if(LOGIN_NAME_NOT_NULL) {
             NewAppUserDto appUserDto = new NewAppUserDto();
             assertThrows(ConstraintViolationException.class, () -> {
-                appUserService.createUser(appUserDto);
+                appUserService.createAppUser(appUserDto);
             });
         }
 
@@ -55,7 +55,7 @@ class AppUserServiceImplTest {
             NewAppUserDto appUserDto = new NewAppUserDto();
             appUserDto.setLoginName(emptyLoginName);
             assertThrows(ConstraintViolationException.class, () -> {
-                appUserService.createUser(appUserDto);
+                appUserService.createAppUser(appUserDto);
             });
         }
 
@@ -65,7 +65,7 @@ class AppUserServiceImplTest {
             NewAppUserDto appUserDto = new NewAppUserDto();
             appUserDto.setLoginName(blankLonginName);
             assertThrows(ConstraintViolationException.class, () -> {
-                appUserService.createUser(appUserDto);
+                appUserService.createAppUser(appUserDto);
             });
         }
 
@@ -74,7 +74,7 @@ class AppUserServiceImplTest {
             NewAppUserDto appUserDto = new NewAppUserDto();
             appUserDto.setLoginName(tooShortLonginName);
             assertDoesNotThrow( () -> {
-                appUserService.createUser(appUserDto);
+                appUserService.createAppUser(appUserDto);
             });
         }
     }

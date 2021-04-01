@@ -4,13 +4,10 @@ import com.obieliakov.tasksmanager.dataloader.GroupsLoader;
 import com.obieliakov.tasksmanager.model.Group;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 class GroupRepositoryTest {
@@ -36,16 +33,5 @@ class GroupRepositoryTest {
     @AfterEach
     void tearDown() {
         groupRepository.deleteAll(loadedGroups);
-    }
-
-    @Test
-    void findByName() {
-        String name = groupsLoader.format(TAG, GroupsLoader.GROUP_NAME, ENUMERATE_FROM);
-        Group group = groupRepository.findByName(name);
-        assertNotNull(group);
-        assertEquals(name, group.getName());
-
-        Group notExisting = groupRepository.findByName("not existing");
-        assertNull(notExisting);
     }
 }
