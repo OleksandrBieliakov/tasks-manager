@@ -95,8 +95,7 @@ public class AppUserServiceImpl implements AppUserService {
 
         AppUser existingAppUser = appUserModelById(id);
 
-        existingAppUser.setFirstName(updateAppUserInfoDto.getFirstName());
-        existingAppUser.setLastName(updateAppUserInfoDto.getLastName());
+        existingAppUser = appUserMapper.copyFromUpdateAppUserInfoDtoToAppUser(updateAppUserInfoDto, existingAppUser);
 
         AppUser updatedAppUser = appUserRepository.save(existingAppUser);
         return appUserMapper.appUserToAppUserDto(updatedAppUser);

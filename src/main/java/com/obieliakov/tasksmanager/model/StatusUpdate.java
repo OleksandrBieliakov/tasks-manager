@@ -17,7 +17,7 @@ public class StatusUpdate {
     private Long id;
 
     @Enumerated(EnumType.STRING)
-    @Column(length = 20, nullable = false)
+    @Column(name = "status", nullable = false, length = Task.STATUS_LENGTH)
     private TaskStatus status;
 
     @Column(name = "time_updated", nullable = false)

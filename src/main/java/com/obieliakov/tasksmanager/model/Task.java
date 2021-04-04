@@ -13,21 +13,29 @@ import java.util.Set;
 @ToString
 public class Task {
 
+    public static final int TITLE_MIN_LENGTH = 1;
+    public static final int TITLE_MAX_LENGTH = 100;
+
+    public static final int DESCRIPTION_MIN_LENGTH = 1;
+    public static final int DESCRIPTION_MAX_LENGTH = 500;
+
+    public static final int STATUS_LENGTH = 20;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "title", nullable = false)
+    @Column(name = "title", nullable = false, length = TITLE_MAX_LENGTH)
     private String title;
 
-    @Column(name = "description")
+    @Column(name = "description", length = DESCRIPTION_MAX_LENGTH)
     private String description;
 
     @Column(name = "time_added", nullable = false)
     private ZonedDateTime timeAdded = ZonedDateTime.now();
 
     @Enumerated(EnumType.STRING)
-    @Column(length = 20, nullable = false)
+    @Column(name = "status", nullable = false, length = STATUS_LENGTH)
     private TaskStatus status = TaskStatus.PENDING;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)

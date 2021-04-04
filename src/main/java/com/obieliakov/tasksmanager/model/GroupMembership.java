@@ -37,7 +37,7 @@ public class GroupMembership {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "app_user_id", foreignKey = @ForeignKey(name = "fk_membership_user"))
-    private AppUser user;
+    private AppUser appUser;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "role_id", foreignKey = @ForeignKey(name = "fk_membership_role"))

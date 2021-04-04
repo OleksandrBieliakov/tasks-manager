@@ -16,6 +16,9 @@ import java.util.Set;
 @ToString
 public class Role {
 
+    public static final int TITLE_MIN_LENGTH = 1;
+    public static final int TITLE_MAX_LENGTH = 100;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

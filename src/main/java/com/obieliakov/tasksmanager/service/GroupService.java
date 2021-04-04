@@ -1,9 +1,6 @@
 package com.obieliakov.tasksmanager.service;
 
-import com.obieliakov.tasksmanager.dto.group.GroupInfoDto;
-import com.obieliakov.tasksmanager.dto.group.GroupMembersDto;
-import com.obieliakov.tasksmanager.dto.group.GroupMembersShortDto;
-import com.obieliakov.tasksmanager.dto.group.NewOrUpdateGroupDto;
+import com.obieliakov.tasksmanager.dto.group.*;
 
 public interface GroupService {
 
@@ -15,7 +12,7 @@ public interface GroupService {
 
     GroupMembersDto groupMembersById(Long id);
 
-    GroupMembersDto groupMembersCustomById(Long id);
+    GroupMembersShortDto groupMembersShortById(Long id);
 
-    GroupMembersShortDto groupMembersCustomShortById(Long id);
+    GroupTasksDto groupTasksById(Long id);
 }

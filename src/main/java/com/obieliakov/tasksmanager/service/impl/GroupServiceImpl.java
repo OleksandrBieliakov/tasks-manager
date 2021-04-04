@@ -2,16 +2,15 @@ package com.obieliakov.tasksmanager.service.impl;
 
 import com.obieliakov.tasksmanager.dto.appUser.AppUserDto;
 import com.obieliakov.tasksmanager.dto.appUser.AppUserShortDto;
-import com.obieliakov.tasksmanager.dto.group.GroupInfoDto;
-import com.obieliakov.tasksmanager.dto.group.GroupMembersDto;
-import com.obieliakov.tasksmanager.dto.group.GroupMembersShortDto;
-import com.obieliakov.tasksmanager.dto.group.NewOrUpdateGroupDto;
+import com.obieliakov.tasksmanager.dto.group.*;
+import com.obieliakov.tasksmanager.dto.task.TaskInfoDto;
 import com.obieliakov.tasksmanager.mapper.AppUserMapper;
 import com.obieliakov.tasksmanager.mapper.GroupMapper;
+import com.obieliakov.tasksmanager.mapper.TaskMapper;
 import com.obieliakov.tasksmanager.model.AppUser;
 import com.obieliakov.tasksmanager.model.Group;
-import com.obieliakov.tasksmanager.model.GroupMembership;
-import com.obieliakov.tasksmanager.repository.AppUserRepository;
+import com.obieliakov.tasksmanager.model.Task;
+import com.obieliakov.tasksmanager.repository.AssignmentRepository;
 import com.obieliakov.tasksmanager.repository.GroupMembershipRepository;
 import com.obieliakov.tasksmanager.repository.GroupRepository;
 import com.obieliakov.tasksmanager.repository.TaskRepository;
@@ -39,20 +38,22 @@ public class GroupServiceImpl implements GroupService {
 
     private final AppUserMapper appUserMapper;
     private final GroupMapper groupMapper;
+    private final TaskMapper taskMapper;
 
     private final GroupRepository groupRepository;
-    private final AppUserRepository appUserRepository;
     private final GroupMembershipRepository groupMembershipRepository;
     private final TaskRepository taskRepository;
+    private final AssignmentRepository assignmentRepository;
 
-    public GroupServiceImpl(GroupRepository groupRepository, GroupMapper groupMapper, Validator validator, GroupMembershipRepository groupMembershipRepository, AppUserMapper appUserMapper, AppUserRepository appUserRepository, TaskRepository taskRepository) {
-        this.groupRepository = groupRepository;
-        this.groupMapper = groupMapper;
+    public GroupServiceImpl(Validator validator, AppUserMapper appUserMapper, GroupMapper groupMapper, TaskMapper taskMapper, GroupRepository groupRepository, GroupMembershipRepository groupMembershipRepository, TaskRepository taskRepository, AssignmentRepository assignmentRepository) {
         this.validator = validator;
-        this.groupMembershipRepository = groupMembershipRepository;
         this.appUserMapper = appUserMapper;
-        this.appUserRepository = appUserRepository;
+        this.groupMapper = groupMapper;
+        this.taskMapper = taskMapper;
+        this.groupRepository = groupRepository;
+        this.groupMembershipRepository = groupMembershipRepository;
         this.taskRepository = taskRepository;
+        this.assignmentRepository = assignmentRepository;
     }
 
     private Group groupModelById(Long id) {
@@ -94,53 +95,58 @@ public class GroupServiceImpl implements GroupService {
 
         Group existingGroup = groupModelById(id);
 
-        existingGroup.setName(newOrUpdateGroupDto.getName());
+        existingGroup = groupMapper.copyNewOrUpdateGroupDtoToGroup(newOrUpdateGroupDto, existingGroup);
 
         Group updatedGroup = groupRepository.save(existingGroup);
         return groupMapper.groupToGroupInfoDto(updatedGroup);
     }
 
-    // members - without custom querying
     @Override
     public GroupMembersDto groupMembersById(Long id) {
         Group group = groupModelById(id);
 
-        List<AppUser> appUserList = new ArrayList<>();
-        List<GroupMembership> memberships = groupMembershipRepository.findGroupMembershipByActiveTrueAndGroup(group);
-        for (GroupMembership membership : memberships) {
-            appUserList.add(appUserRepository.findByGroupMembershipsContains(membership));
-        }
-
-        List<AppUserDto> members = appUserMapper.appUserListToAppUserDtoList(appUserList);
-
-        GroupMembersDto groupMembersDto = groupMapper.groupToGroupMembersDto(group);
-        groupMembersDto.setMembers(members);
-        return groupMembersDto;
-    }
-
-    // members - added to practice custom hql query creation
-    @Override
-    public GroupMembersDto groupMembersCustomById(Long id) {
-        Group group = groupModelById(id);
-
         List<AppUser> appUserList = groupMembershipRepository.queryMembersOfGroupWithId(id);
 
-        List<AppUserDto> members = appUserMapper.appUserListToAppUserDtoList(appUserList);
+        List<AppUserDto> appUserDtoList = appUserMapper.appUserListToAppUserDtoList(appUserList);
 
         GroupMembersDto groupMembersDto = groupMapper.groupToGroupMembersDto(group);
-        groupMembersDto.setMembers(members);
+        groupMembersDto.setMembers(appUserDtoList);
         return groupMembersDto;
     }
 
-    // members - added to practice custom hql query creation with projection to AppUserShortDto
+    // added to practice custom hql query creation with projection to AppUserShortDto
     @Override
-    public GroupMembersShortDto groupMembersCustomShortById(Long id) {
+    public GroupMembersShortDto groupMembersShortById(Long id) {
         Group group = groupModelById(id);
 
-        List<AppUserShortDto> members = groupMembershipRepository.queryMembersShortOfGroupWithId(id);
+        List<AppUserShortDto> appUserShortDtoList = groupMembershipRepository.queryMembersShortOfGroupWithId(id);
 
         GroupMembersShortDto groupMembersShortDto = groupMapper.groupToGroupMembersShortDto(group);
-        groupMembersShortDto.setMembers(members);
+        groupMembersShortDto.setMembers(appUserShortDtoList);
         return groupMembersShortDto;
+    }
+
+    @Override
+    public GroupTasksDto groupTasksById(Long id) {
+        Group group = groupModelById(id);
+
+        List<Task> taskList = taskRepository.findByGroup(group);
+
+        List<TaskInfoDto> taskInfoDtoList = new ArrayList<>();
+
+        for(Task task: taskList) {
+            TaskInfoDto taskInfoDto = taskMapper.taskToTaskInfoDto(task);
+
+            List<AppUser> assignedAppUsers = assignmentRepository.queryAssignedAppUsersByTask(task);
+
+            List<AppUserDto> appUserDtoList = appUserMapper.appUserListToAppUserDtoList(assignedAppUsers);
+            taskInfoDto.setAssignedTo(appUserDtoList);
+
+            taskInfoDtoList.add(taskInfoDto);
+        }
+
+        GroupTasksDto groupTasksDto = groupMapper.groupToGroupTasksDto(group);
+        groupTasksDto.setTasks(taskInfoDtoList);
+        return groupTasksDto;
     }
 }

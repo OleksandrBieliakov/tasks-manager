@@ -35,7 +35,7 @@ public class AppUser {
     @Column(name = "time_registered", nullable = false)
     private ZonedDateTime timeRegistered = ZonedDateTime.now();
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "appUser")
     private Set<GroupMembership> groupMemberships;
 
     @OneToMany(mappedBy = "addedBy")
@@ -47,10 +47,10 @@ public class AppUser {
     @OneToMany(mappedBy = "assignedTo")
     private Set<Assignment> assignments;
 
-    @OneToMany(mappedBy = "byUser")
+    @OneToMany(mappedBy = "byAppUser")
     private Set<GroupInvite> groupInvitesSent;
 
-    @OneToMany(mappedBy = "toUser")
+    @OneToMany(mappedBy = "toAppUser")
     private Set<GroupInvite> groupInvitesReceived;
 
     @OneToMany(mappedBy = "updatedBy")

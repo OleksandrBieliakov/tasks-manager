@@ -12,11 +12,14 @@ import java.time.ZonedDateTime;
 @ToString
 public class Comment {
 
+    public static final int MESSAGE_MIN_LENGTH = 1;
+    public static final int MESSAGE_MAX_LENGTH = 500;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "message")
+    @Column(name = "message", length = MESSAGE_MAX_LENGTH)
     private String message;
 
     @Column(name = "time_added", nullable = false)

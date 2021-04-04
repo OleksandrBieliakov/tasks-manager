@@ -28,9 +28,9 @@ public class GroupInvite {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "by_app_user_id", foreignKey = @ForeignKey(name = "fk_invite_by_user"))
-    private AppUser byUser;
+    private AppUser byAppUser;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "to_app_user_id", foreignKey = @ForeignKey(name = "fk_invite_to_user"))
-    private AppUser toUser;
+    private AppUser toAppUser;
 }
