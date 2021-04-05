@@ -2,6 +2,8 @@ package com.obieliakov.tasksmanager.model;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
 import java.time.ZonedDateTime;
@@ -11,6 +13,7 @@ import java.util.List;
 @Table(name = "user_group")
 @Getter
 @Setter
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class Group {
 
     public static final int NAME_MIN_LENGTH = 1;
@@ -32,6 +35,7 @@ public class Group {
     @OneToMany(mappedBy = "group")
     private List<Role> roles;
 
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @OneToMany(mappedBy = "group")
     private List<Task> tasks;
 

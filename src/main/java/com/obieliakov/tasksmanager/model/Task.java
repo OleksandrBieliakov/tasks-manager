@@ -2,6 +2,8 @@ package com.obieliakov.tasksmanager.model;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
 import java.time.ZonedDateTime;
@@ -11,6 +13,7 @@ import java.util.List;
 @Table(name = "task")
 @Getter
 @Setter
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class Task {
 
     public static final int TITLE_MIN_LENGTH = 1;
@@ -46,6 +49,7 @@ public class Task {
     @JoinColumn(name = "added_by_app_user_id", foreignKey = @ForeignKey(name = "fk_task_app_user_added"))
     private AppUser addedBy;
 
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @OneToMany(mappedBy = "task")
     private List<Assignment> assignments;
 

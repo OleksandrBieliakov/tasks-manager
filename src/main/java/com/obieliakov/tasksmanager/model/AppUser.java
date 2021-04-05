@@ -2,6 +2,8 @@ package com.obieliakov.tasksmanager.model;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
 import java.time.ZonedDateTime;
@@ -14,6 +16,7 @@ import java.util.List;
                 columnNames = {"login_name"})})
 @Getter
 @Setter
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class AppUser {
 
     public static final int NAMES_MIN_LENGTH = 1;

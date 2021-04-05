@@ -2,6 +2,8 @@ package com.obieliakov.tasksmanager.model;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
 import java.time.ZonedDateTime;
@@ -13,6 +15,7 @@ import java.time.ZonedDateTime;
                 columnNames = {"task_id", "assigned_to_app_user_id"})})
 @Getter
 @Setter
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class Assignment {
 
     @Id
