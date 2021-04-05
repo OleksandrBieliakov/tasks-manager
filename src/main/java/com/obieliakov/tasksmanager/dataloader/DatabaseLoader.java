@@ -133,7 +133,7 @@ public class DatabaseLoader implements CommandLineRunner {
         Assignment assignment1Task2AppUser2ToAppUser2 = assignmentFactory.generateAndInit(task2Group1AppUser2Pending, appUser2, appUser2);
         Assignment assignment2Task4AppUser1ToAppUser1 = assignmentFactory.generateAndInit(task4Group1AppUser1InProgress, appUser1, appUser1);
         Assignment assignment3Task4AppUser1ToAppUser2 = assignmentFactory.generateAndInit(task4Group1AppUser1InProgress, appUser1, appUser2);
-        Assignment assignment3Task4AppUser1ToAppUser3 = assignmentFactory.generateAndInit(task4Group1AppUser1InProgress, appUser1, appUser3);
+        Assignment assignment4Task4AppUser1ToAppUser3 = assignmentFactory.generateAndInit(task4Group1AppUser1InProgress, appUser1, appUser3);
         Assignment assignment5Task5AppUser3ToAppUser2 = assignmentFactory.generateAndInit(task5Group1AppUser2InProgress, appUser3, appUser2);
         Assignment assignment6Task6AppUser2ToAppUser1 = assignmentFactory.generateAndInit(task6Group1AppUser3Done, appUser2, appUser1);
         Assignment assignment7Task6AppUser2ToAppUser3 = assignmentFactory.generateAndInit(task6Group1AppUser3Done, appUser2, appUser3);
@@ -142,7 +142,7 @@ public class DatabaseLoader implements CommandLineRunner {
         assignmentRepository.save(assignment1Task2AppUser2ToAppUser2);
         assignmentRepository.save(assignment2Task4AppUser1ToAppUser1);
         assignmentRepository.save(assignment3Task4AppUser1ToAppUser2);
-        assignmentRepository.save(assignment3Task4AppUser1ToAppUser3);
+        assignmentRepository.save(assignment4Task4AppUser1ToAppUser3);
         assignmentRepository.save(assignment5Task5AppUser3ToAppUser2);
         assignmentRepository.save(assignment6Task6AppUser2ToAppUser1);
         assignmentRepository.save(assignment7Task6AppUser2ToAppUser3);

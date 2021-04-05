@@ -137,7 +137,7 @@ public class GroupServiceImpl implements GroupService {
             TaskInfoDto taskInfoDto = taskMapper.taskToTaskInfoDto(task);
 
             List<AppUser> assignedAppUsers = task.getAssignments().stream()
-                    .map(Assignment::getAssignedBy).collect(Collectors.toList());
+                    .map(Assignment::getAssignedTo).collect(Collectors.toList());
 
             List<AppUserDto> appUserDtoList = appUserMapper.appUserListToAppUserDtoList(assignedAppUsers);
             taskInfoDto.setAssignedTo(appUserDtoList);
