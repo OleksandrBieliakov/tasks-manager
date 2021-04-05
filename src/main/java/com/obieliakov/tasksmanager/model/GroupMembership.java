@@ -1,7 +1,7 @@
 package com.obieliakov.tasksmanager.model;
 
-import lombok.Data;
-import lombok.ToString;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.ZonedDateTime;
@@ -11,8 +11,8 @@ import java.time.ZonedDateTime;
         uniqueConstraints = {@UniqueConstraint(
                 name = "unique_membership_group_user",
                 columnNames = {"group_id", "app_user_id"})})
-@Data
-@ToString
+@Getter
+@Setter
 public class GroupMembership {
 
     @Id

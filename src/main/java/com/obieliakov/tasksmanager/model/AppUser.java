@@ -1,19 +1,19 @@
 package com.obieliakov.tasksmanager.model;
 
-import lombok.Data;
-import lombok.ToString;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.ZonedDateTime;
-import java.util.Set;
+import java.util.List;
 
 @Entity
 @Table(name = "app_user",
         uniqueConstraints = {@UniqueConstraint(
                 name = "unique_app_user_login_name",
                 columnNames = {"login_name"})})
-@Data
-@ToString
+@Getter
+@Setter
 public class AppUser {
 
     public static final int NAMES_MIN_LENGTH = 1;
@@ -36,26 +36,26 @@ public class AppUser {
     private ZonedDateTime timeRegistered = ZonedDateTime.now();
 
     @OneToMany(mappedBy = "appUser")
-    private Set<GroupMembership> groupMemberships;
+    private List<GroupMembership> groupMemberships;
 
     @OneToMany(mappedBy = "addedBy")
-    private Set<Task> tasksAdded;
+    private List<Task> tasksAdded;
 
     @OneToMany(mappedBy = "assignedBy")
-    private Set<Assignment> assignmentsMade;
+    private List<Assignment> assignmentsMade;
 
     @OneToMany(mappedBy = "assignedTo")
-    private Set<Assignment> assignments;
+    private List<Assignment> assignments;
 
     @OneToMany(mappedBy = "byAppUser")
-    private Set<GroupInvite> groupInvitesSent;
+    private List<GroupInvite> groupInvitesSent;
 
     @OneToMany(mappedBy = "toAppUser")
-    private Set<GroupInvite> groupInvitesReceived;
+    private List<GroupInvite> groupInvitesReceived;
 
     @OneToMany(mappedBy = "updatedBy")
-    private Set<StatusUpdate> statusesUpdated;
+    private List<StatusUpdate> statusesUpdated;
 
     @OneToMany(mappedBy = "addedBy")
-    private Set<Comment> commentsAdded;
+    private List<Comment> commentsAdded;
 }

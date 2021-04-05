@@ -2,13 +2,11 @@ package com.obieliakov.tasksmanager.dto.appUser;
 
 import com.obieliakov.tasksmanager.model.AppUser;
 import lombok.Data;
-import lombok.ToString;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 @Data
-@ToString
 public class NewAppUserDto {
 
     @NotNull

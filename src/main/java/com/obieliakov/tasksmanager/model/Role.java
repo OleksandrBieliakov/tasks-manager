@@ -1,19 +1,19 @@
 package com.obieliakov.tasksmanager.model;
 
 
-import lombok.Data;
-import lombok.ToString;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
-import java.util.Set;
+import java.util.List;
 
 @Entity
 @Table(name = "role",
         uniqueConstraints = {@UniqueConstraint(
                 name = "unique_role_title_group",
                 columnNames = {"title", "group_id"})})
-@Data
-@ToString
+@Getter
+@Setter
 public class Role {
 
     public static final int TITLE_MIN_LENGTH = 1;
@@ -31,5 +31,5 @@ public class Role {
     private Group group;
 
     @OneToMany(mappedBy = "role")
-    private Set<GroupMembership> groupMemberships;
+    private List<GroupMembership> groupMemberships;
 }

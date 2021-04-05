@@ -8,13 +8,14 @@ import com.obieliakov.tasksmanager.mapper.AppUserMapper;
 import com.obieliakov.tasksmanager.mapper.GroupMapper;
 import com.obieliakov.tasksmanager.mapper.TaskMapper;
 import com.obieliakov.tasksmanager.model.AppUser;
+import com.obieliakov.tasksmanager.model.Assignment;
 import com.obieliakov.tasksmanager.model.Group;
 import com.obieliakov.tasksmanager.model.Task;
-import com.obieliakov.tasksmanager.repository.AssignmentRepository;
 import com.obieliakov.tasksmanager.repository.GroupMembershipRepository;
 import com.obieliakov.tasksmanager.repository.GroupRepository;
-import com.obieliakov.tasksmanager.repository.TaskRepository;
 import com.obieliakov.tasksmanager.service.GroupService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,15 +25,17 @@ import org.springframework.web.server.ResponseStatusException;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import javax.validation.Validator;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @Validated
 @Transactional
 public class GroupServiceImpl implements GroupService {
+
+    Logger log = LoggerFactory.getLogger(GroupServiceImpl.class);
 
     private final Validator validator;
 
@@ -42,18 +45,14 @@ public class GroupServiceImpl implements GroupService {
 
     private final GroupRepository groupRepository;
     private final GroupMembershipRepository groupMembershipRepository;
-    private final TaskRepository taskRepository;
-    private final AssignmentRepository assignmentRepository;
 
-    public GroupServiceImpl(Validator validator, AppUserMapper appUserMapper, GroupMapper groupMapper, TaskMapper taskMapper, GroupRepository groupRepository, GroupMembershipRepository groupMembershipRepository, TaskRepository taskRepository, AssignmentRepository assignmentRepository) {
+    public GroupServiceImpl(Validator validator, AppUserMapper appUserMapper, GroupMapper groupMapper, TaskMapper taskMapper, GroupRepository groupRepository, GroupMembershipRepository groupMembershipRepository) {
         this.validator = validator;
         this.appUserMapper = appUserMapper;
         this.groupMapper = groupMapper;
         this.taskMapper = taskMapper;
         this.groupRepository = groupRepository;
         this.groupMembershipRepository = groupMembershipRepository;
-        this.taskRepository = taskRepository;
-        this.assignmentRepository = assignmentRepository;
     }
 
     private Group groupModelById(Long id) {
@@ -130,20 +129,21 @@ public class GroupServiceImpl implements GroupService {
     public GroupTasksDto groupTasksById(Long id) {
         Group group = groupModelById(id);
 
-        List<Task> taskList = taskRepository.findByGroup(group);
+        List<Task> taskList = group.getTasks();
 
-        List<TaskInfoDto> taskInfoDtoList = new ArrayList<>();
+        // log.debug("Tasks: {}", taskList.size());
 
-        for(Task task: taskList) {
+        List<TaskInfoDto> taskInfoDtoList = taskList.stream().map(task -> {
             TaskInfoDto taskInfoDto = taskMapper.taskToTaskInfoDto(task);
 
-            List<AppUser> assignedAppUsers = assignmentRepository.queryAssignedAppUsersByTask(task);
+            List<AppUser> assignedAppUsers = task.getAssignments().stream()
+                    .map(Assignment::getAssignedBy).collect(Collectors.toList());
 
             List<AppUserDto> appUserDtoList = appUserMapper.appUserListToAppUserDtoList(assignedAppUsers);
             taskInfoDto.setAssignedTo(appUserDtoList);
 
-            taskInfoDtoList.add(taskInfoDto);
-        }
+            return taskInfoDto;
+        }).collect(Collectors.toList());
 
         GroupTasksDto groupTasksDto = groupMapper.groupToGroupTasksDto(group);
         groupTasksDto.setTasks(taskInfoDtoList);

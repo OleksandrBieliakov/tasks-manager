@@ -1,15 +1,15 @@
 package com.obieliakov.tasksmanager.model;
 
-import lombok.Data;
-import lombok.ToString;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.ZonedDateTime;
 
 @Entity
 @Table(name = "status_update")
-@Data
-@ToString
+@Getter
+@Setter
 public class StatusUpdate {
 
     @Id

@@ -1,16 +1,16 @@
 package com.obieliakov.tasksmanager.model;
 
-import lombok.Data;
-import lombok.ToString;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.ZonedDateTime;
-import java.util.Set;
+import java.util.List;
 
 @Entity
 @Table(name = "task")
-@Data
-@ToString
+@Getter
+@Setter
 public class Task {
 
     public static final int TITLE_MIN_LENGTH = 1;
@@ -47,11 +47,11 @@ public class Task {
     private AppUser addedBy;
 
     @OneToMany(mappedBy = "task")
-    private Set<Assignment> assignments;
+    private List<Assignment> assignments;
 
     @OneToMany(mappedBy = "task")
-    private Set<StatusUpdate> statusUpdates;
+    private List<StatusUpdate> statusUpdates;
 
     @OneToMany(mappedBy = "task")
-    private Set<Comment> comments;
+    private List<Comment> comments;
 }

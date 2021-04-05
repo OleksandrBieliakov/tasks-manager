@@ -1,16 +1,16 @@
 package com.obieliakov.tasksmanager.model;
 
-import lombok.Data;
-import lombok.ToString;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.ZonedDateTime;
-import java.util.Set;
+import java.util.List;
 
 @Entity
 @Table(name = "user_group")
-@Data
-@ToString
+@Getter
+@Setter
 public class Group {
 
     public static final int NAME_MIN_LENGTH = 1;
@@ -27,16 +27,16 @@ public class Group {
     private ZonedDateTime timeCreated = ZonedDateTime.now();
 
     @OneToMany(mappedBy = "group")
-    private Set<GroupMembership> groupMemberships;
+    private List<GroupMembership> groupMemberships;
 
     @OneToMany(mappedBy = "group")
-    private Set<Role> roles;
+    private List<Role> roles;
 
     @OneToMany(mappedBy = "group")
-    private Set<Task> tasks;
+    private List<Task> tasks;
 
     @OneToMany(mappedBy = "group")
-    private Set<GroupInvite> invites;
+    private List<GroupInvite> invites;
 
     /*
     If there were no additional columns in the table 'group_membership' then it would be possible to create many to

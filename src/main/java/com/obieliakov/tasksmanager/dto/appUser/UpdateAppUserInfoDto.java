@@ -2,12 +2,10 @@ package com.obieliakov.tasksmanager.dto.appUser;
 
 import com.obieliakov.tasksmanager.model.AppUser;
 import lombok.Data;
-import lombok.ToString;
 
 import javax.validation.constraints.Size;
 
 @Data
-@ToString
 public class UpdateAppUserInfoDto {
 
     @Size(min = AppUser.NAMES_MIN_LENGTH, max = AppUser.NAMES_MAX_LENGTH)
