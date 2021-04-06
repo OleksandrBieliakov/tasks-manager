@@ -7,6 +7,8 @@ import com.obieliakov.tasksmanager.mapper.AppUserMapper;
 import com.obieliakov.tasksmanager.model.AppUser;
 import com.obieliakov.tasksmanager.repository.AppUserRepository;
 import com.obieliakov.tasksmanager.service.AppUserService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,6 +25,8 @@ import java.util.Set;
 @Transactional
 //@Validated // needed to validate functions parameters annotated with @Valid
 public class AppUserServiceImpl implements AppUserService {
+
+    private final Logger log = LoggerFactory.getLogger(AppUserServiceImpl.class);
 
     private final Validator validator;
 

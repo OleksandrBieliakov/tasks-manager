@@ -4,6 +4,8 @@ import com.obieliakov.tasksmanager.dto.group.*;
 import com.obieliakov.tasksmanager.service.GroupService;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping(value = "/groups")
 public class GroupController {
@@ -43,5 +45,10 @@ public class GroupController {
     @GetMapping("/{id}/tasks")
     public GroupTasksDto groupTasks(@PathVariable Long id) {
         return groupService.groupTasksById(id);
+    }
+
+    @GetMapping
+    public List<GroupInfoDto> allGroups() {
+        return groupService.allGroups();
     }
 }

@@ -19,7 +19,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.ConstraintViolation;
@@ -31,11 +30,10 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
-@Validated
 @Transactional
 public class GroupServiceImpl implements GroupService {
 
-    Logger log = LoggerFactory.getLogger(GroupServiceImpl.class);
+    private final Logger log = LoggerFactory.getLogger(GroupServiceImpl.class);
 
     private final Validator validator;
 
@@ -148,5 +146,11 @@ public class GroupServiceImpl implements GroupService {
         GroupTasksDto groupTasksDto = groupMapper.groupToGroupTasksDto(group);
         groupTasksDto.setTasks(taskInfoDtoList);
         return groupTasksDto;
+    }
+
+    @Override
+    public List<GroupInfoDto> allGroups() {
+        List<Group> groups = groupRepository.findAll();
+        return groupMapper.groupListToGroupInfoDtoList(groups);
     }
 }

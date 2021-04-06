@@ -2,6 +2,8 @@ package com.obieliakov.tasksmanager.service;
 
 import com.obieliakov.tasksmanager.dto.group.*;
 
+import java.util.List;
+
 public interface GroupService {
 
     GroupInfoDto groupInfoById(Long id);
@@ -15,4 +17,6 @@ public interface GroupService {
     GroupMembersShortDto groupMembersShortById(Long id);
 
     GroupTasksDto groupTasksById(Long id);
+
+    List<GroupInfoDto> allGroups();
 }
