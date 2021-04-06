@@ -2,6 +2,7 @@ package com.obieliakov.tasksmanager.service.impl;
 
 import com.obieliakov.tasksmanager.dto.task.NewTaskCreatedDto;
 import com.obieliakov.tasksmanager.dto.task.NewTaskDto;
+import com.obieliakov.tasksmanager.dto.task.TaskDto;
 import com.obieliakov.tasksmanager.mapper.TaskMapper;
 import com.obieliakov.tasksmanager.model.AppUser;
 import com.obieliakov.tasksmanager.model.Group;
@@ -22,6 +23,7 @@ import org.springframework.web.server.ResponseStatusException;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import javax.validation.Validator;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -48,6 +50,14 @@ public class TaskServiceImpl implements TaskService {
         this.appUserRepository = appUserRepository;
         this.groupRepository = groupRepository;
         this.groupMembershipRepository = groupMembershipRepository;
+    }
+
+    private Task taskModelById(Long id) {
+        Optional<Task> task = taskRepository.findById(id);
+        if (task.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Task not found");
+        }
+        return task.get();
     }
 
     private AppUser appUserModelById(Long id) {
@@ -92,5 +102,17 @@ public class TaskServiceImpl implements TaskService {
         newTask.setGroup(group);
         Task createdTask = taskRepository.save(newTask);
         return taskMapper.taskToNewTaskCreatedDto(createdTask);
+    }
+
+    @Override
+    public void deleteTask(Long id) {
+        Task task = taskModelById(id);
+        taskRepository.delete(task);
+    }
+
+    @Override
+    public List<TaskDto> allTasks() {
+        List<Task> taskList = taskRepository.findAll();
+        return taskMapper.taskListToTaskDtoList(taskList);
     }
 }
