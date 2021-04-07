@@ -1,8 +1,6 @@
 package com.obieliakov.tasksmanager.controller;
 
-import com.obieliakov.tasksmanager.dto.task.NewTaskCreatedDto;
-import com.obieliakov.tasksmanager.dto.task.NewTaskDto;
-import com.obieliakov.tasksmanager.dto.task.TaskDto;
+import com.obieliakov.tasksmanager.dto.task.*;
 import com.obieliakov.tasksmanager.service.TaskService;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,13 +21,18 @@ public class TaskController {
         return taskService.createTask(newTaskDto);
     }
 
+    @PatchMapping("{id}")
+    public TaskUpdatedDto updateTaskInfo(@PathVariable Long id, @RequestBody UpdateTaskInfoDto updateTaskInfoDto) {
+        return taskService.updateTaskInfo(id, updateTaskInfoDto);
+    }
+
     @DeleteMapping("{id}")
     public void deleteTask(@PathVariable Long id) {
         taskService.deleteTask(id);
     }
 
     @GetMapping
-    public List<TaskDto> allTasks() {
+    public List<TaskShortInfoDto> allTasks() {
         return taskService.allTasks();
     }
 }

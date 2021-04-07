@@ -3,7 +3,7 @@ package com.obieliakov.tasksmanager.service.impl;
 import com.obieliakov.tasksmanager.dto.appUser.AppUserDto;
 import com.obieliakov.tasksmanager.dto.appUser.AppUserShortDto;
 import com.obieliakov.tasksmanager.dto.group.*;
-import com.obieliakov.tasksmanager.dto.task.TaskInfoDto;
+import com.obieliakov.tasksmanager.dto.task.TaskAssignedToDto;
 import com.obieliakov.tasksmanager.mapper.AppUserMapper;
 import com.obieliakov.tasksmanager.mapper.GroupMapper;
 import com.obieliakov.tasksmanager.mapper.TaskMapper;
@@ -131,20 +131,20 @@ public class GroupServiceImpl implements GroupService {
 
         // log.debug("Tasks: {}", taskList.size());
 
-        List<TaskInfoDto> taskInfoDtoList = taskList.stream().map(task -> {
-            TaskInfoDto taskInfoDto = taskMapper.taskToTaskInfoDto(task);
+        List<TaskAssignedToDto> taskAssignedToDtoList = taskList.stream().map(task -> {
+            TaskAssignedToDto taskAssignedToDto = taskMapper.taskToTaskAssignedToDto(task);
 
             List<AppUser> assignedAppUsers = task.getAssignments().stream()
                     .map(Assignment::getAssignedTo).collect(Collectors.toList());
 
             List<AppUserDto> appUserDtoList = appUserMapper.appUserListToAppUserDtoList(assignedAppUsers);
-            taskInfoDto.setAssignedTo(appUserDtoList);
+            taskAssignedToDto.setAssignedTo(appUserDtoList);
 
-            return taskInfoDto;
+            return taskAssignedToDto;
         }).collect(Collectors.toList());
 
         GroupTasksDto groupTasksDto = groupMapper.groupToGroupTasksDto(group);
-        groupTasksDto.setTasks(taskInfoDtoList);
+        groupTasksDto.setTasks(taskAssignedToDtoList);
         return groupTasksDto;
     }
 

@@ -1,8 +1,6 @@
 package com.obieliakov.tasksmanager.service;
 
-import com.obieliakov.tasksmanager.dto.task.NewTaskCreatedDto;
-import com.obieliakov.tasksmanager.dto.task.NewTaskDto;
-import com.obieliakov.tasksmanager.dto.task.TaskDto;
+import com.obieliakov.tasksmanager.dto.task.*;
 
 import java.util.List;
 
@@ -10,7 +8,9 @@ public interface TaskService {
 
     NewTaskCreatedDto createTask(NewTaskDto newTaskDto);
 
+    TaskUpdatedDto updateTaskInfo(Long id, UpdateTaskInfoDto updateTaskInfoDto);
+
     void deleteTask(Long id);
 
-    List<TaskDto> allTasks();
+    List<TaskShortInfoDto> allTasks();
 }

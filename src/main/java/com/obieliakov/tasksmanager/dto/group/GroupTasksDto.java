@@ -1,6 +1,6 @@
 package com.obieliakov.tasksmanager.dto.group;
 
-import com.obieliakov.tasksmanager.dto.task.TaskInfoDto;
+import com.obieliakov.tasksmanager.dto.task.TaskAssignedToDto;
 import lombok.Data;
 
 import java.util.List;
@@ -10,5 +10,5 @@ public class GroupTasksDto {
 
     private Long id;
     private String name;
-    private List<TaskInfoDto> tasks;
+    private List<TaskAssignedToDto> tasks;
 }

@@ -1,12 +1,11 @@
 package com.obieliakov.tasksmanager.dto.task;
 
-import com.obieliakov.tasksmanager.model.TaskStatus;
 import lombok.Data;
 
 @Data
-public class TaskDto {
+public class TaskUpdatedDto {
 
     private Long id;
     private String title;
-    private TaskStatus status;
+    private String description;
 }

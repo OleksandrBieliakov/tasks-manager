@@ -1,8 +1,6 @@
 package com.obieliakov.tasksmanager.service.impl;
 
-import com.obieliakov.tasksmanager.dto.task.NewTaskCreatedDto;
-import com.obieliakov.tasksmanager.dto.task.NewTaskDto;
-import com.obieliakov.tasksmanager.dto.task.TaskDto;
+import com.obieliakov.tasksmanager.dto.task.*;
 import com.obieliakov.tasksmanager.mapper.TaskMapper;
 import com.obieliakov.tasksmanager.model.AppUser;
 import com.obieliakov.tasksmanager.model.Group;
@@ -105,14 +103,31 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
+    public TaskUpdatedDto updateTaskInfo(Long id, UpdateTaskInfoDto updateTaskInfoDto) {
+        updateTaskInfoDto.trim();
+
+        Set<ConstraintViolation<UpdateTaskInfoDto>> violations = validator.validate(updateTaskInfoDto);
+        if (!violations.isEmpty()) {
+            throw new ConstraintViolationException(violations);
+        }
+
+        Task existingTask = taskModelById(id);
+
+        existingTask = taskMapper.copyUpdateTaskInfoDtoToTask(updateTaskInfoDto, existingTask);
+
+        Task updatedTask = taskRepository.save(existingTask);
+        return taskMapper.taskToTaskUpdatedDto(updatedTask);
+    }
+
+    @Override
     public void deleteTask(Long id) {
         Task task = taskModelById(id);
         taskRepository.delete(task);
     }
 
     @Override
-    public List<TaskDto> allTasks() {
+    public List<TaskShortInfoDto> allTasks() {
         List<Task> taskList = taskRepository.findAll();
-        return taskMapper.taskListToTaskDtoList(taskList);
+        return taskMapper.taskListToTaskShortInfoDtoList(taskList);
     }
 }

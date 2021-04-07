@@ -1,26 +1,28 @@
 package com.obieliakov.tasksmanager.mapper;
 
-import com.obieliakov.tasksmanager.dto.task.NewTaskCreatedDto;
-import com.obieliakov.tasksmanager.dto.task.NewTaskDto;
-import com.obieliakov.tasksmanager.dto.task.TaskDto;
-import com.obieliakov.tasksmanager.dto.task.TaskInfoDto;
+import com.obieliakov.tasksmanager.dto.task.*;
 import com.obieliakov.tasksmanager.model.Task;
 import org.mapstruct.Mapper;
+import org.mapstruct.MappingTarget;
 
 import java.util.List;
 
 @Mapper(componentModel = "spring")
 public interface TaskMapper {
 
-    TaskInfoDto taskToTaskInfoDto(Task task);
+    TaskAssignedToDto taskToTaskAssignedToDto(Task task);
 
-    List<TaskInfoDto> taskListToTaskInfoDtoList(List<Task> tasks);
+    List<TaskAssignedToDto> taskListToTaskAssignedToDtoList(List<Task> tasks);
 
     Task newTaskDtoToTask (NewTaskDto newTaskDto);
 
     NewTaskCreatedDto taskToNewTaskCreatedDto(Task task);
 
-    TaskDto taskToTaskDto(Task task);
+    TaskShortInfoDto taskToTaskShortInfoDto(Task task);
 
-    List<TaskDto> taskListToTaskDtoList(List<Task> tasks);
+    List<TaskShortInfoDto> taskListToTaskShortInfoDtoList(List<Task> tasks);
+
+    TaskUpdatedDto taskToTaskUpdatedDto(Task task);
+
+    Task copyUpdateTaskInfoDtoToTask(UpdateTaskInfoDto updateTaskInfoDto, @MappingTarget Task task);
 }
