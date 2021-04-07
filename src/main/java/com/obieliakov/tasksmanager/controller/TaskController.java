@@ -1,5 +1,7 @@
 package com.obieliakov.tasksmanager.controller;
 
+import com.obieliakov.tasksmanager.dto.statusupdate.NewStatusUpdateDto;
+import com.obieliakov.tasksmanager.dto.statusupdate.StatusUpdateDto;
 import com.obieliakov.tasksmanager.dto.task.*;
 import com.obieliakov.tasksmanager.service.TaskService;
 import org.springframework.web.bind.annotation.*;
@@ -24,6 +26,16 @@ public class TaskController {
     @PatchMapping("{id}")
     public TaskUpdatedDto updateTaskInfo(@PathVariable Long id, @RequestBody UpdateTaskInfoDto updateTaskInfoDto) {
         return taskService.updateTaskInfo(id, updateTaskInfoDto);
+    }
+
+    @PatchMapping("{id}/status-update")
+    public StatusUpdateDto updateTaskStatus(@PathVariable Long id, @RequestBody NewStatusUpdateDto newStatusUpdateDto) {
+        return taskService.updateTaskStatus(id, newStatusUpdateDto);
+    }
+
+    @GetMapping("{id}/status-update")
+    public TaskStatusUpdatesDto updateTaskStatus(@PathVariable Long id) {
+        return taskService.taskStatusUpdates(id);
     }
 
     @DeleteMapping("{id}")

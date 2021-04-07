@@ -3,6 +3,7 @@ package com.obieliakov.tasksmanager.mapper;
 import com.obieliakov.tasksmanager.dto.task.*;
 import com.obieliakov.tasksmanager.model.Task;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 
 import java.util.List;
@@ -25,4 +26,7 @@ public interface TaskMapper {
     TaskUpdatedDto taskToTaskUpdatedDto(Task task);
 
     Task copyUpdateTaskInfoDtoToTask(UpdateTaskInfoDto updateTaskInfoDto, @MappingTarget Task task);
+
+    @Mapping(target = "statusUpdates", ignore = true)
+    TaskStatusUpdatesDto taskToTaskStatusUpdatesDto(Task task);
 }

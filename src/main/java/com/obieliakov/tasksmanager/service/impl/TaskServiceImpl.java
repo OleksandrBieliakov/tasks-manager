@@ -1,15 +1,12 @@
 package com.obieliakov.tasksmanager.service.impl;
 
+import com.obieliakov.tasksmanager.dto.statusupdate.NewStatusUpdateDto;
+import com.obieliakov.tasksmanager.dto.statusupdate.StatusUpdateDto;
 import com.obieliakov.tasksmanager.dto.task.*;
+import com.obieliakov.tasksmanager.mapper.StatusUpdateMapper;
 import com.obieliakov.tasksmanager.mapper.TaskMapper;
-import com.obieliakov.tasksmanager.model.AppUser;
-import com.obieliakov.tasksmanager.model.Group;
-import com.obieliakov.tasksmanager.model.GroupMembership;
-import com.obieliakov.tasksmanager.model.Task;
-import com.obieliakov.tasksmanager.repository.AppUserRepository;
-import com.obieliakov.tasksmanager.repository.GroupMembershipRepository;
-import com.obieliakov.tasksmanager.repository.GroupRepository;
-import com.obieliakov.tasksmanager.repository.TaskRepository;
+import com.obieliakov.tasksmanager.model.*;
+import com.obieliakov.tasksmanager.repository.*;
 import com.obieliakov.tasksmanager.service.TaskService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,20 +31,24 @@ public class TaskServiceImpl implements TaskService {
     private final Validator validator;
 
     private final TaskMapper taskMapper;
+    private final StatusUpdateMapper statusUpdateMapper;
 
     private final TaskRepository taskRepository;
     private final AppUserRepository appUserRepository;
     private final GroupRepository groupRepository;
     private final GroupMembershipRepository groupMembershipRepository;
+    private final StatusUpdateRepository statusUpdateRepository;
 
 
-    public TaskServiceImpl(Validator validator, TaskMapper taskMapper, TaskRepository taskRepository, AppUserRepository appUserRepository, GroupRepository groupRepository, GroupMembershipRepository groupMembershipRepository) {
+    public TaskServiceImpl(Validator validator, TaskMapper taskMapper, StatusUpdateMapper statusUpdateMapper, TaskRepository taskRepository, AppUserRepository appUserRepository, GroupRepository groupRepository, GroupMembershipRepository groupMembershipRepository, StatusUpdateRepository statusUpdateRepository) {
         this.validator = validator;
         this.taskMapper = taskMapper;
+        this.statusUpdateMapper = statusUpdateMapper;
         this.taskRepository = taskRepository;
         this.appUserRepository = appUserRepository;
         this.groupRepository = groupRepository;
         this.groupMembershipRepository = groupMembershipRepository;
+        this.statusUpdateRepository = statusUpdateRepository;
     }
 
     private Task taskModelById(Long id) {
@@ -123,6 +124,48 @@ public class TaskServiceImpl implements TaskService {
     public void deleteTask(Long id) {
         Task task = taskModelById(id);
         taskRepository.delete(task);
+    }
+
+    @Override
+    public StatusUpdateDto updateTaskStatus(Long id, NewStatusUpdateDto newStatusUpdateDto) {
+        Set<ConstraintViolation<NewStatusUpdateDto>> violations = validator.validate(newStatusUpdateDto);
+        if (!violations.isEmpty()) {
+            throw new ConstraintViolationException(violations);
+        }
+
+        Task task = taskModelById(id);
+        AppUser updatedBy = appUserModelById(newStatusUpdateDto.getUpdatedByAppUserId());
+        Group group = task.getGroup();
+        GroupMembership groupMembership = activeGroupMembershipByGroupAndAppUser(group, updatedBy);
+
+        if(task.getStatus().equals(newStatusUpdateDto.getNewTaskStatus())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Task already has this status");
+        }
+
+        StatusUpdate newStatusUpdate = new StatusUpdate();
+        newStatusUpdate.setStatus(newStatusUpdateDto.getNewTaskStatus());
+        newStatusUpdate.setTask(task);
+        newStatusUpdate.setUpdatedBy(updatedBy);
+
+        StatusUpdate createdStatusUpdate = statusUpdateRepository.save(newStatusUpdate);
+
+        task.setStatus(newStatusUpdateDto.getNewTaskStatus());
+        taskRepository.save(task);
+
+        return statusUpdateMapper.statusUpdateToStatusUpdateDto(createdStatusUpdate);
+    }
+
+    @Override
+    public TaskStatusUpdatesDto taskStatusUpdates(Long id) {
+        Task task = taskModelById(id);
+
+        List<StatusUpdate> statusUpdateList = statusUpdateRepository.findAllByTask(task);
+
+        List<StatusUpdateDto> statusUpdateDtoList = statusUpdateMapper.statusUpdateListToStatusUpdateDtoList(statusUpdateList);
+
+        TaskStatusUpdatesDto taskStatusUpdatesDto = taskMapper.taskToTaskStatusUpdatesDto(task);
+        taskStatusUpdatesDto.setStatusUpdates(statusUpdateDtoList);
+        return taskStatusUpdatesDto;
     }
 
     @Override
