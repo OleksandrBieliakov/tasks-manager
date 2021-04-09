@@ -4,12 +4,14 @@ import com.obieliakov.tasksmanager.dto.statusupdate.NewStatusUpdateDto;
 import com.obieliakov.tasksmanager.dto.statusupdate.StatusUpdateDto;
 import com.obieliakov.tasksmanager.dto.task.*;
 import com.obieliakov.tasksmanager.service.TaskService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "/tasks")
+@RequestMapping(value = "/api/tasks")
+@SecurityRequirement(name = "identity")
 public class TaskController {
 
     private final TaskService taskService;

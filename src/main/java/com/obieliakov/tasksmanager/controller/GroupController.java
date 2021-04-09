@@ -2,12 +2,14 @@ package com.obieliakov.tasksmanager.controller;
 
 import com.obieliakov.tasksmanager.dto.group.*;
 import com.obieliakov.tasksmanager.service.GroupService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "/groups")
+@RequestMapping(value = "/api/groups")
+@SecurityRequirement(name = "identity")
 public class GroupController {
 
     private final GroupService groupService;

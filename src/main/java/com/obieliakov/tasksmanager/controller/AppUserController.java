@@ -4,12 +4,14 @@ import com.obieliakov.tasksmanager.dto.appUser.AppUserDto;
 import com.obieliakov.tasksmanager.dto.appUser.NewAppUserDto;
 import com.obieliakov.tasksmanager.dto.appUser.UpdateAppUserInfoDto;
 import com.obieliakov.tasksmanager.service.AppUserService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "/users")
+@RequestMapping(value = "/api/users")
+@SecurityRequirement(name = "identity")
 public class AppUserController {
 
     private final AppUserService appUserService;
