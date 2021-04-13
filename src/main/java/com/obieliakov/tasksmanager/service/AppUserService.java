@@ -17,4 +17,6 @@ public interface AppUserService {
     AppUserDto updateAppUserInfo(Long userid, UpdateAppUserInfoDto updateAppUserInfoDto);
 
     List<AppUserDto> allAppUsers();
+
+    AppUserDto currentUser();
 }

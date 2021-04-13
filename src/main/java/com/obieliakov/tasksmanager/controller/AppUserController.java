@@ -44,4 +44,9 @@ public class AppUserController {
     public List<AppUserDto> allAppUsers() {
         return appUserService.allAppUsers();
     }
+
+    @GetMapping("/current")
+    public AppUserDto currentUser() {
+        return appUserService.currentUser();
+    }
 }
