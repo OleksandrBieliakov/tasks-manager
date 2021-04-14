@@ -79,8 +79,12 @@ public class SecurityConfig extends KeycloakWebSecurityConfigurerAdapter {
                 .headers().frameOptions().disable()
                 .and().authorizeRequests()
                 /*.antMatchers(
-                        "/api/groups/**"
+                        "/api/common/**",
+                        "/img/**"
                 ).permitAll()*/
+                .antMatchers(
+                        "/api/admin/**"
+                ).hasRole("tm-admin")
                 .antMatchers(
                         "/api/**"
                 ).authenticated();
