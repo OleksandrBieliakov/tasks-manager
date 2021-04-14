@@ -24,6 +24,7 @@ import javax.validation.Validator;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.UUID;
 
 @Service
 @Transactional
@@ -44,7 +45,7 @@ public class AppUserServiceImpl implements AppUserService {
         this.validator = validator;
     }
 
-    private AppUser appUserModelById(Long id) {
+    private AppUser appUserModelById(UUID id) {
         Optional<AppUser> appUser = appUserRepository.findById(id);
         if (appUser.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
@@ -61,7 +62,7 @@ public class AppUserServiceImpl implements AppUserService {
     }
 
     @Override
-    public AppUserDto appUserById(Long id) {
+    public AppUserDto appUserById(UUID id) {
         AppUser appUser = appUserModelById(id);
         return appUserMapper.appUserToAppUserDto(appUser);
     }
@@ -93,7 +94,7 @@ public class AppUserServiceImpl implements AppUserService {
     }
 
     @Override
-    public AppUserDto updateAppUserInfo(Long id, UpdateAppUserInfoDto updateAppUserInfoDto) {
+    public AppUserDto updateAppUserInfo(UUID id, UpdateAppUserInfoDto updateAppUserInfoDto) {
         updateAppUserInfoDto.trim();
 
         Set<ConstraintViolation<UpdateAppUserInfoDto>> violations = validator.validate(updateAppUserInfoDto);

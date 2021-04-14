@@ -17,20 +17,16 @@ class AppUserMapperTest {
     @Test
     void appUserToAppUserDto() {
         AppUser appUser = new AppUser();
-        appUser.setId(1L);
         appUser.setLoginName("Bob");
         AppUserDto appUserDto = appUserMapper.appUserToAppUserDto(appUser);
-        assertEquals(1, appUserDto.getId());
         assertEquals("Bob", appUserDto.getLoginName());
     }
 
     @Test
     void appUserDtoToAppUser() {
         AppUserDto appUserDto = new AppUserDto();
-        appUserDto.setId(2L);
         appUserDto.setLoginName("Bill");
         AppUser appUser = appUserMapper.appUserDtoToAppUser(appUserDto);
-        assertEquals(2, appUser.getId());
         assertEquals("Bill", appUser.getLoginName());
     }
 }

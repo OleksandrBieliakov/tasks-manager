@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 public class AppUserFactory implements Factory<AppUser> {
 
     public static final String LOGIN_NAME = "login_name";
+    public static final String EMAIL = "email";
     public static final String FIRST_NAME = "first_name";
     public static final String LAST_NAME = "last_name";
 
@@ -17,6 +18,7 @@ public class AppUserFactory implements Factory<AppUser> {
         int serial_number = next_serial_number;
         AppUser appUser = new AppUser();
         appUser.setLoginName(format(LOGIN_NAME, serial_number));
+        appUser.setEmail(format(EMAIL, serial_number));
         appUser.setFirstName(format(FIRST_NAME, serial_number));
         appUser.setLastName(format(LAST_NAME, serial_number));
         next_serial_number++;

@@ -4,6 +4,7 @@ import com.obieliakov.tasksmanager.model.TaskStatus;
 import lombok.Data;
 
 import javax.validation.constraints.NotNull;
+import java.util.UUID;
 
 @Data
 public class NewStatusUpdateDto {
@@ -12,5 +13,5 @@ public class NewStatusUpdateDto {
     private TaskStatus newTaskStatus;
 
     @NotNull
-    private Long updatedByAppUserId;
+    private UUID updatedByAppUserId;
 }

@@ -4,16 +4,18 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.UUID;
+
 // added to practice custom hql query creation with projection to AppUserShortDto
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class AppUserShortDto {
 
-    private Long id;
+    private UUID id;
     private String name;
 
-    public AppUserShortDto(Long id, String loginName, String firstName, String lastName) {
+    public AppUserShortDto(UUID id, String loginName, String firstName, String lastName) {
         this.id = id;
         setName(loginName, firstName, lastName);
     }

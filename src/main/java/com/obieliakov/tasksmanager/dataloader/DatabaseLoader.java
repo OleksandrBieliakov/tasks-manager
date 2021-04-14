@@ -3,11 +3,26 @@ package com.obieliakov.tasksmanager.dataloader;
 import com.obieliakov.tasksmanager.dataloader.factory.*;
 import com.obieliakov.tasksmanager.model.*;
 import com.obieliakov.tasksmanager.repository.*;
+import com.obieliakov.tasksmanager.service.impl.AppUserServiceImpl;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
+
 @Component
 public class DatabaseLoader implements CommandLineRunner {
+
+    private static final String ID = "id";
+    private static final String PATH = "gitignored/test_user_IDs";
+
+    private final Logger log = LoggerFactory.getLogger(AppUserServiceImpl.class);
 
     private final AppUserFactory appUserFactory;
     private final GroupFactory groupFactory;
@@ -50,8 +65,28 @@ public class DatabaseLoader implements CommandLineRunner {
         this.commentRepository = commentRepository;
     }
 
+    private Map<String, UUID> loadAppUserIds() {
+        Map<String, UUID> idMap = new HashMap<>();
+        try(BufferedReader reader = new BufferedReader(new FileReader(PATH))) {
+            String line = reader.readLine();
+            int nextIdIndex = 1;
+            while (line != null) {
+                idMap.put(ID + nextIdIndex++, UUID.fromString(line));
+                line = reader.readLine();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return idMap;
+    }
+
     @Override
     public void run(String... strings) throws Exception {
+
+        var idMap = loadAppUserIds();
+        if(idMap.size() < 6) {
+            throw new Exception("not enough test user IDs to load data");
+        }
 
         AppUser appUser1 = appUserFactory.generate();
         AppUser appUser2 = appUserFactory.generate();
@@ -59,6 +94,13 @@ public class DatabaseLoader implements CommandLineRunner {
         AppUser appUser4 = appUserFactory.generate();
         AppUser appUser5 = appUserFactory.generate();
         AppUser appUser6 = appUserFactory.generate();
+
+        appUser1.setId(idMap.get(ID + 1));
+        appUser2.setId(idMap.get(ID + 2));
+        appUser3.setId(idMap.get(ID + 3));
+        appUser4.setId(idMap.get(ID + 4));
+        appUser5.setId(idMap.get(ID + 5));
+        appUser6.setId(idMap.get(ID + 6));
 
         appUserRepository.save(appUser1);
         appUserRepository.save(appUser2);

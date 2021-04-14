@@ -8,6 +8,7 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 import javax.persistence.*;
 import java.time.ZonedDateTime;
 import java.util.List;
+import java.util.UUID;
 
 @Entity
 @Table(name = "app_user",
@@ -21,13 +22,16 @@ public class AppUser {
 
     public static final int NAMES_MIN_LENGTH = 1;
     public static final int NAMES_MAX_LENGTH = 50;
+    public static final int EMAIL_MAX_LENGTH = 320;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private UUID id;
 
     @Column(name = "login_name", nullable = false, length = NAMES_MAX_LENGTH)
     private String loginName;
+
+    @Column(name="email", nullable = false, length = EMAIL_MAX_LENGTH)
+    private String email;
 
     @Column(name = "first_name", length = NAMES_MAX_LENGTH)
     private String firstName;

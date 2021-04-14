@@ -21,6 +21,7 @@ import javax.validation.Validator;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.UUID;
 
 @Service
 @Transactional
@@ -59,7 +60,7 @@ public class TaskServiceImpl implements TaskService {
         return task.get();
     }
 
-    private AppUser appUserModelById(Long id) {
+    private AppUser appUserModelById(UUID id) {
         Optional<AppUser> appUser = appUserRepository.findById(id);
         if (appUser.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");

@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping(value = "/api/users")
@@ -21,7 +22,7 @@ public class AppUserController {
     }
 
     @GetMapping("/{id}")
-    public AppUserDto appUserById(@PathVariable Long id) {
+    public AppUserDto appUserById(@PathVariable UUID id) {
         return appUserService.appUserById(id);
     }
 
@@ -36,7 +37,7 @@ public class AppUserController {
     }
 
     @PatchMapping("/{id}")
-    public AppUserDto updateAppUserInfo(@PathVariable Long id, @RequestBody UpdateAppUserInfoDto updateAppUserInfoDto) {
+    public AppUserDto updateAppUserInfo(@PathVariable UUID id, @RequestBody UpdateAppUserInfoDto updateAppUserInfoDto) {
         return appUserService.updateAppUserInfo(id, updateAppUserInfoDto);
     }
 
