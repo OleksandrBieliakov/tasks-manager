@@ -12,11 +12,11 @@ public interface GroupService {
 
     GroupInfoDto updateGroupInfo(Long id, NewOrUpdateGroupDto newOrUpdateGroupDto);
 
-    GroupMembersDto groupMembersById(Long id);
+    GroupMembersDto groupMembersById(Long id, boolean isAdmin);
 
     GroupMembersShortDto groupMembersShortById(Long id);
 
-    GroupTasksDto groupTasksById(Long id);
+    GroupTasksDto groupTasksById(Long id, boolean isAdmin);
 
     List<GroupInfoDto> allGroups();
 }

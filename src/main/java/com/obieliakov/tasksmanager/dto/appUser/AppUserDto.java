@@ -9,6 +9,7 @@ public class AppUserDto {
 
     private UUID id;
     private String loginName;
+    private String email;
     private String firstName;
     private String lastName;
 }

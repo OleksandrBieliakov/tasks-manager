@@ -7,17 +7,11 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 @Data
-public class NewAppUserDto {
+public class UpdateLoginNameDto {
 
     @NotNull
     @Size(min = AppUser.NAMES_MIN_LENGTH, max = AppUser.NAMES_MAX_LENGTH)
     private String loginName;
-
-    @NotNull
-    private Boolean publicEmail;
-
-    @NotNull
-    private Boolean publicFirstLastName;
 
     public void trim() {
         if (loginName != null) {

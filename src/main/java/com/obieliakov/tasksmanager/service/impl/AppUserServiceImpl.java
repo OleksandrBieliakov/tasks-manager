@@ -2,7 +2,7 @@ package com.obieliakov.tasksmanager.service.impl;
 
 import com.obieliakov.tasksmanager.dto.appUser.AppUserDto;
 import com.obieliakov.tasksmanager.dto.appUser.NewAppUserDto;
-import com.obieliakov.tasksmanager.dto.appUser.UpdateAppUserInfoDto;
+import com.obieliakov.tasksmanager.dto.appUser.UpdateLoginNameDto;
 import com.obieliakov.tasksmanager.mapper.AppUserMapper;
 import com.obieliakov.tasksmanager.model.AppUser;
 import com.obieliakov.tasksmanager.repository.AppUserRepository;
@@ -58,15 +58,15 @@ public class AppUserServiceImpl implements AppUserService {
     }
 
     @Override
-    public AppUserDto appUserById(UUID id) {
+    public AppUserDto appUserById(UUID id, boolean isAdmin) {
         AppUser appUser = appUserModelById(id);
-        return appUserMapper.appUserToAppUserDto(appUser);
+        return appUserMapper.appUserToAppUserDto(appUser, isAdmin);
     }
 
     @Override
-    public AppUserDto appUserByLoginName(String loginName) {
+    public AppUserDto appUserByLoginName(String loginName, boolean isAdmin) {
         AppUser appUser = appUserModelByLoginName(loginName);
-        return appUserMapper.appUserToAppUserDto(appUser);
+        return appUserMapper.appUserToAppUserDto(appUser, isAdmin);
     }
 
     @Override
@@ -86,29 +86,29 @@ public class AppUserServiceImpl implements AppUserService {
         AppUser newAppUser = appUserMapper.newAppUserDtoToAppUser(newAppUserDto);
 
         AppUser createdAppUser = appUserRepository.save(newAppUser);
-        return appUserMapper.appUserToAppUserDto(createdAppUser);
+        return appUserMapper.appUserToAppUserDtoUnconditional(createdAppUser);
     }
 
     @Override
-    public AppUserDto updateAppUserInfo(UUID id, UpdateAppUserInfoDto updateAppUserInfoDto) {
-        updateAppUserInfoDto.trim();
+    public AppUserDto updateAppUserLoginName(UUID id, UpdateLoginNameDto updateLoginNameDto) {
+        updateLoginNameDto.trim();
 
-        Set<ConstraintViolation<UpdateAppUserInfoDto>> violations = validator.validate(updateAppUserInfoDto);
+        Set<ConstraintViolation<UpdateLoginNameDto>> violations = validator.validate(updateLoginNameDto);
         if (!violations.isEmpty()) {
             throw new ConstraintViolationException(violations);
         }
 
         AppUser existingAppUser = appUserModelById(id);
 
-        existingAppUser = appUserMapper.copyFromUpdateAppUserInfoDtoToAppUser(updateAppUserInfoDto, existingAppUser);
+        existingAppUser = appUserMapper.copyFromUpdateLoginNameDtoToAppUser(updateLoginNameDto, existingAppUser);
 
         AppUser updatedAppUser = appUserRepository.save(existingAppUser);
-        return appUserMapper.appUserToAppUserDto(updatedAppUser);
+        return appUserMapper.appUserToAppUserDtoUnconditional(updatedAppUser);
     }
 
     @Override
     public List<AppUserDto> allAppUsers() {
         List<AppUser> appUsers = appUserRepository.findAll();
-        return appUserMapper.appUserListToAppUserDtoList(appUsers);
+        return appUserMapper.appUserListToAppUserDtoListUnconditional(appUsers);
     }
 }

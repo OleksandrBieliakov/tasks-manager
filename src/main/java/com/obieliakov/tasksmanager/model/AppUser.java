@@ -33,11 +33,17 @@ public class AppUser {
     @Column(name="email", nullable = false, length = EMAIL_MAX_LENGTH)
     private String email;
 
-    @Column(name = "first_name", length = NAMES_MAX_LENGTH)
+    @Column(name = "first_name", nullable = false, length = NAMES_MAX_LENGTH)
     private String firstName;
 
-    @Column(name = "last_name", length = NAMES_MAX_LENGTH)
+    @Column(name = "last_name", nullable = false, length = NAMES_MAX_LENGTH)
     private String lastName;
+
+    @Column(name = "public_email", nullable = false)
+    private Boolean publicEmail;
+
+    @Column(name = "public_first_last_name", nullable = false)
+    private Boolean publicFirstLastName;
 
     @Column(name = "time_registered", nullable = false)
     private ZonedDateTime timeRegistered = ZonedDateTime.now();

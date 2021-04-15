@@ -21,6 +21,8 @@ public class AppUserFactory implements Factory<AppUser> {
         appUser.setEmail(format(EMAIL, serial_number));
         appUser.setFirstName(format(FIRST_NAME, serial_number));
         appUser.setLastName(format(LAST_NAME, serial_number));
+        appUser.setPublicEmail(false);
+        appUser.setPublicFirstLastName(false);
         next_serial_number++;
         return appUser;
     }

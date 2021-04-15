@@ -99,12 +99,12 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
-    public GroupMembersDto groupMembersById(Long id) {
+    public GroupMembersDto groupMembersById(Long id, boolean isAdmin) {
         Group group = groupModelById(id);
 
         List<AppUser> appUserList = groupMembershipRepository.queryMembersOfGroupWithId(id);
 
-        List<AppUserDto> appUserDtoList = appUserMapper.appUserListToAppUserDtoList(appUserList);
+        List<AppUserDto> appUserDtoList = appUserMapper.appUserListToAppUserDtoList(appUserList, isAdmin);
 
         GroupMembersDto groupMembersDto = groupMapper.groupToGroupMembersDto(group);
         groupMembersDto.setMembers(appUserDtoList);
@@ -124,12 +124,10 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
-    public GroupTasksDto groupTasksById(Long id) {
+    public GroupTasksDto groupTasksById(Long id, boolean isAdmin) {
         Group group = groupModelById(id);
 
         List<Task> taskList = group.getTasks();
-
-        // log.debug("Tasks: {}", taskList.size());
 
         List<TaskAssignedToDto> taskAssignedToDtoList = taskList.stream().map(task -> {
             TaskAssignedToDto taskAssignedToDto = taskMapper.taskToTaskAssignedToDto(task);
@@ -137,7 +135,7 @@ public class GroupServiceImpl implements GroupService {
             List<AppUser> assignedAppUsers = task.getAssignments().stream()
                     .map(Assignment::getAssignedTo).collect(Collectors.toList());
 
-            List<AppUserDto> appUserDtoList = appUserMapper.appUserListToAppUserDtoList(assignedAppUsers);
+            List<AppUserDto> appUserDtoList = appUserMapper.appUserListToAppUserDtoList(assignedAppUsers, isAdmin);
             taskAssignedToDto.setAssignedTo(appUserDtoList);
 
             return taskAssignedToDto;

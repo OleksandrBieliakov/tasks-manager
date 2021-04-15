@@ -18,7 +18,7 @@ class AppUserMapperTest {
     void appUserToAppUserDto() {
         AppUser appUser = new AppUser();
         appUser.setLoginName("Bob");
-        AppUserDto appUserDto = appUserMapper.appUserToAppUserDto(appUser);
+        AppUserDto appUserDto = appUserMapper.appUserToAppUserDto(appUser, false);
         assertEquals("Bob", appUserDto.getLoginName());
     }
 

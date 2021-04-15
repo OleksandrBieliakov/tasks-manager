@@ -20,7 +20,7 @@ import java.util.UUID;
 public class DatabaseLoader implements CommandLineRunner {
 
     private static final String ID = "id";
-    private static final String PATH = "gitignored/test_user_IDs";
+    private static final String PATH = "gitignored/test_user_IDs.txt";
 
     private final Logger log = LoggerFactory.getLogger(AppUserServiceImpl.class);
 
