@@ -7,7 +7,6 @@ import com.obieliakov.tasksmanager.service.AppUserService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -39,15 +38,5 @@ public class AppUserController {
     @PatchMapping("/{id}")
     public AppUserDto updateAppUserInfo(@PathVariable UUID id, @RequestBody UpdateAppUserInfoDto updateAppUserInfoDto) {
         return appUserService.updateAppUserInfo(id, updateAppUserInfoDto);
-    }
-
-    @GetMapping
-    public List<AppUserDto> allAppUsers() {
-        return appUserService.allAppUsers();
-    }
-
-    @GetMapping("/current")
-    public AppUserDto currentUser() {
-        return appUserService.currentUser();
     }
 }

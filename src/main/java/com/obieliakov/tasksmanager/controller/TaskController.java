@@ -7,8 +7,6 @@ import com.obieliakov.tasksmanager.service.TaskService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
 @RequestMapping(value = "/api/tasks")
 @SecurityRequirement(name = "identity")
@@ -43,10 +41,5 @@ public class TaskController {
     @DeleteMapping("{id}")
     public void deleteTask(@PathVariable Long id) {
         taskService.deleteTask(id);
-    }
-
-    @GetMapping
-    public List<TaskShortInfoDto> allTasks() {
-        return taskService.allTasks();
     }
 }

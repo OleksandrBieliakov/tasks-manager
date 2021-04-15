@@ -7,13 +7,9 @@ import com.obieliakov.tasksmanager.mapper.AppUserMapper;
 import com.obieliakov.tasksmanager.model.AppUser;
 import com.obieliakov.tasksmanager.repository.AppUserRepository;
 import com.obieliakov.tasksmanager.service.AppUserService;
-import org.keycloak.KeycloakPrincipal;
-import org.keycloak.KeycloakSecurityContext;
-import org.keycloak.representations.AccessToken;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
@@ -114,26 +110,5 @@ public class AppUserServiceImpl implements AppUserService {
     public List<AppUserDto> allAppUsers() {
         List<AppUser> appUsers = appUserRepository.findAll();
         return appUserMapper.appUserListToAppUserDtoList(appUsers);
-    }
-
-    @Override
-    public AppUserDto currentUser() {
-        try {
-            Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-            if (principal instanceof KeycloakPrincipal) {
-                KeycloakPrincipal<KeycloakSecurityContext> keycloakPrincipal = (KeycloakPrincipal<KeycloakSecurityContext>) principal;
-                AppUserDto user = new AppUserDto();
-                user.setLoginName(keycloakPrincipal.getName());
-                AccessToken token = keycloakPrincipal.getKeycloakSecurityContext().getToken();
-                user.setFirstName(token.getGivenName());
-                user.setLastName(token.getFamilyName());
-                return user;
-            } else {
-                log.warn("Cannot get user data from principal");
-            }
-        } catch (Exception e) {
-            log.warn("Cannot get principal: {}", e.getMessage());
-        }
-        return null;
     }
 }

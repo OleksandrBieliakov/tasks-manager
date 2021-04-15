@@ -18,6 +18,4 @@ public interface AppUserService {
     AppUserDto updateAppUserInfo(UUID id, UpdateAppUserInfoDto updateAppUserInfoDto);
 
     List<AppUserDto> allAppUsers();
-
-    AppUserDto currentUser();
 }

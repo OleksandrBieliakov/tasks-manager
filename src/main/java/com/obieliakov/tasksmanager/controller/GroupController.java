@@ -5,8 +5,6 @@ import com.obieliakov.tasksmanager.service.GroupService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
 @RequestMapping(value = "/api/groups")
 @SecurityRequirement(name = "identity")
@@ -47,10 +45,5 @@ public class GroupController {
     @GetMapping("/{id}/tasks")
     public GroupTasksDto groupTasks(@PathVariable Long id) {
         return groupService.groupTasksById(id);
-    }
-
-    @GetMapping
-    public List<GroupInfoDto> allGroups() {
-        return groupService.allGroups();
     }
 }
