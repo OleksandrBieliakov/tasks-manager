@@ -29,12 +29,12 @@ public class TaskController {
     }
 
     @PatchMapping("{id}/status-update")
-    public StatusUpdateDto updateTaskStatus(@PathVariable Long id, @RequestBody NewStatusUpdateDto newStatusUpdateDto) {
+    public StatusUpdateDto taskStatusUpdates(@PathVariable Long id, @RequestBody NewStatusUpdateDto newStatusUpdateDto) {
         return taskService.updateTaskStatus(id, newStatusUpdateDto);
     }
 
     @GetMapping("{id}/status-update")
-    public TaskStatusUpdatesDto updateTaskStatus(@PathVariable Long id) {
+    public TaskStatusUpdatesDto taskStatusUpdates(@PathVariable Long id) {
         return taskService.taskStatusUpdates(id);
     }
 

@@ -1,8 +1,6 @@
 package com.obieliakov.tasksmanager.controller;
 
-import com.obieliakov.tasksmanager.dto.appUser.AppUserDto;
-import com.obieliakov.tasksmanager.dto.appUser.NewAppUserDto;
-import com.obieliakov.tasksmanager.dto.appUser.UpdateLoginNameDto;
+import com.obieliakov.tasksmanager.dto.appUser.*;
 import com.obieliakov.tasksmanager.service.AppUserService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.web.bind.annotation.*;
@@ -31,12 +29,17 @@ public class AppUserController {
     }
 
     @PostMapping
-    public AppUserDto createAppUser(@RequestBody NewAppUserDto newAppUserDto) {
+    public AppUserFullInfoDto createAppUser(@RequestBody NewAppUserDto newAppUserDto) {
         return appUserService.createAppUser(newAppUserDto);
     }
 
-    @PatchMapping("/{id}")
-    public AppUserDto updateAppUserLoginName(@PathVariable UUID id, @RequestBody UpdateLoginNameDto updateLoginNameDto) {
+    @PatchMapping("/{id}/login-name")
+    public AppUserFullInfoDto updateAppUserLoginName(@PathVariable UUID id, @RequestBody UpdateLoginNameDto updateLoginNameDto) {
         return appUserService.updateAppUserLoginName(id, updateLoginNameDto);
+    }
+
+    @PatchMapping("{id}/privacy")
+    public AppUserFullInfoDto updateAppUserPrivacySettings(@PathVariable UUID id, @RequestBody UpdatePrivacySettingsDto updatePrivacySettingsDto) {
+        return appUserService.updateAppUserPrivacySettings(id, updatePrivacySettingsDto);
     }
 }

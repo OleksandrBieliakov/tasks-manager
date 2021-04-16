@@ -1,8 +1,16 @@
 package com.obieliakov.tasksmanager.service;
 
-import com.obieliakov.tasksmanager.dto.appUser.AppUserDto;
+import com.obieliakov.tasksmanager.dto.appUser.AppUserIdentityDto;
+
+import java.util.UUID;
 
 public interface IdentityService {
 
-    AppUserDto currentUser();
+    AppUserIdentityDto currentUser();
+
+    UUID currentUserID();
+
+    boolean unauthorized(UUID checkedUserId);
+
+    boolean unauthorized(AppUserIdentityDto currentUser, UUID checkedUserId);
 }

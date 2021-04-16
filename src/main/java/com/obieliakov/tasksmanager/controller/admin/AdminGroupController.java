@@ -1,9 +1,14 @@
 package com.obieliakov.tasksmanager.controller.admin;
 
-import com.obieliakov.tasksmanager.dto.group.*;
+import com.obieliakov.tasksmanager.dto.group.GroupInfoDto;
+import com.obieliakov.tasksmanager.dto.group.GroupMembersDto;
+import com.obieliakov.tasksmanager.dto.group.GroupTasksDto;
 import com.obieliakov.tasksmanager.service.GroupService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
@@ -23,25 +28,9 @@ public class AdminGroupController {
         return groupService.groupInfoById(id);
     }
 
-    @PostMapping
-    public GroupInfoDto createGroup(@RequestBody NewOrUpdateGroupDto newOrUpdateGroupDto) {
-        return groupService.createGroup(newOrUpdateGroupDto);
-    }
-
-    @PatchMapping("/{id}")
-    public GroupInfoDto updateGroupInfo(@PathVariable Long id, @RequestBody NewOrUpdateGroupDto newOrUpdateGroupDto) {
-        return groupService.updateGroupInfo(id, newOrUpdateGroupDto);
-    }
-
     @GetMapping("/{id}/members")
     public GroupMembersDto groupMembers(@PathVariable Long id) {
         return groupService.groupMembersById(id, true);
-    }
-
-    // added to practice custom hql query creation with projection to AppUserShortDto
-    @GetMapping("/{id}/members/short")
-    public GroupMembersShortDto groupMembersShort(@PathVariable Long id) {
-        return groupService.groupMembersShortById(id);
     }
 
     @GetMapping("/{id}/tasks")

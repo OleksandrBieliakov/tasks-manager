@@ -1,12 +1,11 @@
 package com.obieliakov.tasksmanager.service.impl;
 
-import com.obieliakov.tasksmanager.dto.appUser.AppUserDto;
-import com.obieliakov.tasksmanager.dto.appUser.NewAppUserDto;
-import com.obieliakov.tasksmanager.dto.appUser.UpdateLoginNameDto;
+import com.obieliakov.tasksmanager.dto.appUser.*;
 import com.obieliakov.tasksmanager.mapper.AppUserMapper;
 import com.obieliakov.tasksmanager.model.AppUser;
 import com.obieliakov.tasksmanager.repository.AppUserRepository;
 import com.obieliakov.tasksmanager.service.AppUserService;
+import com.obieliakov.tasksmanager.service.IdentityService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -35,10 +34,13 @@ public class AppUserServiceImpl implements AppUserService {
 
     private final AppUserRepository appUserRepository;
 
-    public AppUserServiceImpl(AppUserRepository appUserRepository, AppUserMapper appUserMapper, Validator validator) {
+    private final IdentityService identityService;
+
+    public AppUserServiceImpl(AppUserRepository appUserRepository, AppUserMapper appUserMapper, Validator validator, IdentityService identityService) {
         this.appUserRepository = appUserRepository;
         this.appUserMapper = appUserMapper;
         this.validator = validator;
+        this.identityService = identityService;
     }
 
     private AppUser appUserModelById(UUID id) {
@@ -70,7 +72,7 @@ public class AppUserServiceImpl implements AppUserService {
     }
 
     @Override
-    public AppUserDto createAppUser(NewAppUserDto newAppUserDto) {
+    public AppUserFullInfoDto createAppUser(NewAppUserDto newAppUserDto) {
         newAppUserDto.trim();
 
         Set<ConstraintViolation<NewAppUserDto>> violations = validator.validate(newAppUserDto);
@@ -78,19 +80,27 @@ public class AppUserServiceImpl implements AppUserService {
             throw new ConstraintViolationException(violations);
         }
 
-        Optional<AppUser> appUserOptional = appUserRepository.findByLoginName(newAppUserDto.getLoginName());
-        if (appUserOptional.isPresent()) {
+        AppUserIdentityDto appUserIdentityDto = identityService.currentUser();
+
+        Optional<AppUser> appUserOptionalById = appUserRepository.findById(appUserIdentityDto.getId());
+        if (appUserOptionalById.isPresent()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User already exists");
+        }
+
+        Optional<AppUser> appUserOptionalByLoginName = appUserRepository.findByLoginName(newAppUserDto.getLoginName());
+        if (appUserOptionalByLoginName.isPresent()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Login name is used by another user");
         }
 
         AppUser newAppUser = appUserMapper.newAppUserDtoToAppUser(newAppUserDto);
+        newAppUser = appUserMapper.copyFromAppUserIdentityDtoToAppUser(appUserIdentityDto, newAppUser);
 
         AppUser createdAppUser = appUserRepository.save(newAppUser);
-        return appUserMapper.appUserToAppUserDtoUnconditional(createdAppUser);
+        return appUserMapper.appUserToAppUserFullInfoDto(createdAppUser);
     }
 
     @Override
-    public AppUserDto updateAppUserLoginName(UUID id, UpdateLoginNameDto updateLoginNameDto) {
+    public AppUserFullInfoDto updateAppUserLoginName(UUID id, UpdateLoginNameDto updateLoginNameDto) {
         updateLoginNameDto.trim();
 
         Set<ConstraintViolation<UpdateLoginNameDto>> violations = validator.validate(updateLoginNameDto);
@@ -98,12 +108,50 @@ public class AppUserServiceImpl implements AppUserService {
             throw new ConstraintViolationException(violations);
         }
 
+        AppUserIdentityDto appUserIdentityDto = identityService.currentUser();
+
+        if(identityService.unauthorized(appUserIdentityDto, id)) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
+        }
+
+        Optional<AppUser> appUserOptionalByLoginName = appUserRepository.findByLoginName(updateLoginNameDto.getLoginName());
+        if (appUserOptionalByLoginName.isPresent() && !appUserOptionalByLoginName.get().getId().equals(id)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Login name is used by another user");
+        }
+
         AppUser existingAppUser = appUserModelById(id);
+
+        // synchronize with identity
+        existingAppUser = appUserMapper.copyFromAppUserIdentityDtoToAppUser(appUserIdentityDto, existingAppUser);
 
         existingAppUser = appUserMapper.copyFromUpdateLoginNameDtoToAppUser(updateLoginNameDto, existingAppUser);
 
         AppUser updatedAppUser = appUserRepository.save(existingAppUser);
-        return appUserMapper.appUserToAppUserDtoUnconditional(updatedAppUser);
+        return appUserMapper.appUserToAppUserFullInfoDto(updatedAppUser);
+    }
+
+    @Override
+    public AppUserFullInfoDto updateAppUserPrivacySettings(UUID id, UpdatePrivacySettingsDto updatePrivacySettingsDto) {
+        Set<ConstraintViolation<UpdatePrivacySettingsDto>> violations = validator.validate(updatePrivacySettingsDto);
+        if (!violations.isEmpty()) {
+            throw new ConstraintViolationException(violations);
+        }
+
+        AppUserIdentityDto appUserIdentityDto = identityService.currentUser();
+
+        if(identityService.unauthorized(appUserIdentityDto, id)) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
+        }
+
+        AppUser existingAppUser = appUserModelById(id);
+
+        // synchronize with identity
+        existingAppUser = appUserMapper.copyFromAppUserIdentityDtoToAppUser(appUserIdentityDto, existingAppUser);
+
+        existingAppUser = appUserMapper.copyFromUpdatePrivacySettingsDtoToAppUser(updatePrivacySettingsDto, existingAppUser);
+
+        AppUser updatedAppUser = appUserRepository.save(existingAppUser);
+        return appUserMapper.appUserToAppUserFullInfoDto(updatedAppUser);
     }
 
     @Override

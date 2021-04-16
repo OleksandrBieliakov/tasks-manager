@@ -1,8 +1,6 @@
 package com.obieliakov.tasksmanager.mapper;
 
-import com.obieliakov.tasksmanager.dto.appUser.AppUserDto;
-import com.obieliakov.tasksmanager.dto.appUser.NewAppUserDto;
-import com.obieliakov.tasksmanager.dto.appUser.UpdateLoginNameDto;
+import com.obieliakov.tasksmanager.dto.appUser.*;
 import com.obieliakov.tasksmanager.model.AppUser;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;
@@ -50,4 +48,10 @@ public interface AppUserMapper {
     AppUser newAppUserDtoToAppUser(NewAppUserDto newAppUserDto);
 
     AppUser copyFromUpdateLoginNameDtoToAppUser(UpdateLoginNameDto updateLoginNameDto, @MappingTarget AppUser appUser);
+
+    AppUser copyFromUpdatePrivacySettingsDtoToAppUser(UpdatePrivacySettingsDto updatePrivacySettingsDto, @MappingTarget AppUser appUser);
+
+    AppUser copyFromAppUserIdentityDtoToAppUser(AppUserIdentityDto updateLoginNameDto, @MappingTarget AppUser appUser);
+
+    AppUserFullInfoDto appUserToAppUserFullInfoDto(AppUser appUser);
 }

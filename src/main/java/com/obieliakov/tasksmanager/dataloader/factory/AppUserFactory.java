@@ -3,6 +3,8 @@ package com.obieliakov.tasksmanager.dataloader.factory;
 import com.obieliakov.tasksmanager.model.AppUser;
 import org.springframework.stereotype.Component;
 
+import java.time.ZonedDateTime;
+
 @Component
 public class AppUserFactory implements Factory<AppUser> {
 
@@ -23,6 +25,7 @@ public class AppUserFactory implements Factory<AppUser> {
         appUser.setLastName(format(LAST_NAME, serial_number));
         appUser.setPublicEmail(false);
         appUser.setPublicFirstLastName(false);
+        appUser.setTimeRegistered(ZonedDateTime.now());
         next_serial_number++;
         return appUser;
     }
