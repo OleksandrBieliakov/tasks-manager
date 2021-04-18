@@ -1,11 +1,16 @@
 package com.obieliakov.tasksmanager.service;
 
 import com.obieliakov.tasksmanager.dto.appUser.*;
+import com.obieliakov.tasksmanager.model.AppUser;
 
 import java.util.List;
 import java.util.UUID;
 
 public interface AppUserService {
+
+    AppUser appUserModelById(UUID id);
+
+    AppUser appUserModelByLoginName(String loginName);
 
     AppUserDto appUserById(UUID id, boolean isAdmin);
 
@@ -13,9 +18,9 @@ public interface AppUserService {
 
     AppUserFullInfoDto createAppUser(NewAppUserDto newAppUserDto);
 
-    AppUserFullInfoDto updateAppUserLoginName(UUID id, UpdateLoginNameDto updateLoginNameDto);
+    AppUserFullInfoDto updateAppUserLoginName(UpdateLoginNameDto updateLoginNameDto);
 
-    AppUserFullInfoDto updateAppUserPrivacySettings(UUID id, UpdatePrivacySettingsDto updatePrivacySettingsDto);
+    AppUserFullInfoDto updateAppUserPrivacySettings(UpdatePrivacySettingsDto updatePrivacySettingsDto);
 
     List<AppUserDto> allAppUsers();
 }

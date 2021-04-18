@@ -1,12 +1,15 @@
 package com.obieliakov.tasksmanager.service;
 
 import com.obieliakov.tasksmanager.dto.group.*;
+import com.obieliakov.tasksmanager.model.Group;
 
 import java.util.List;
 
 public interface GroupService {
 
-    GroupInfoDto groupInfoById(Long id);
+    Group groupModelById(Long id);
+
+    GroupInfoDto groupInfoById(Long id, boolean isAdmin);
 
     GroupInfoDto createGroup(NewOrUpdateGroupDto newOrUpdateGroupDto);
 
@@ -14,9 +17,9 @@ public interface GroupService {
 
     GroupMembersDto groupMembersById(Long id, boolean isAdmin);
 
-    GroupMembersShortDto groupMembersShortById(Long id);
-
     GroupTasksDto groupTasksById(Long id, boolean isAdmin);
 
     List<GroupInfoDto> allGroups();
+
+    GroupMembersShortDto groupMembersShortById(Long id);
 }

@@ -43,7 +43,8 @@ public class AppUserServiceImpl implements AppUserService {
         this.identityService = identityService;
     }
 
-    private AppUser appUserModelById(UUID id) {
+    @Override
+    public AppUser appUserModelById(UUID id) {
         Optional<AppUser> appUser = appUserRepository.findById(id);
         if (appUser.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
@@ -51,7 +52,8 @@ public class AppUserServiceImpl implements AppUserService {
         return appUser.get();
     }
 
-    private AppUser appUserModelByLoginName(String loginName) {
+    @Override
+    public AppUser appUserModelByLoginName(String loginName) {
         Optional<AppUser> appUser = appUserRepository.findByLoginName(loginName);
         if (appUser.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
@@ -100,7 +102,7 @@ public class AppUserServiceImpl implements AppUserService {
     }
 
     @Override
-    public AppUserFullInfoDto updateAppUserLoginName(UUID id, UpdateLoginNameDto updateLoginNameDto) {
+    public AppUserFullInfoDto updateAppUserLoginName(UpdateLoginNameDto updateLoginNameDto) {
         updateLoginNameDto.trim();
 
         Set<ConstraintViolation<UpdateLoginNameDto>> violations = validator.validate(updateLoginNameDto);
@@ -108,11 +110,7 @@ public class AppUserServiceImpl implements AppUserService {
             throw new ConstraintViolationException(violations);
         }
 
-        AppUserIdentityDto appUserIdentityDto = identityService.currentUser();
-
-        if(identityService.unauthorized(appUserIdentityDto, id)) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
-        }
+        UUID id = identityService.currentUserID();
 
         Optional<AppUser> appUserOptionalByLoginName = appUserRepository.findByLoginName(updateLoginNameDto.getLoginName());
         if (appUserOptionalByLoginName.isPresent() && !appUserOptionalByLoginName.get().getId().equals(id)) {
@@ -121,9 +119,6 @@ public class AppUserServiceImpl implements AppUserService {
 
         AppUser existingAppUser = appUserModelById(id);
 
-        // synchronize with identity
-        existingAppUser = appUserMapper.copyFromAppUserIdentityDtoToAppUser(appUserIdentityDto, existingAppUser);
-
         existingAppUser = appUserMapper.copyFromUpdateLoginNameDtoToAppUser(updateLoginNameDto, existingAppUser);
 
         AppUser updatedAppUser = appUserRepository.save(existingAppUser);
@@ -131,22 +126,15 @@ public class AppUserServiceImpl implements AppUserService {
     }
 
     @Override
-    public AppUserFullInfoDto updateAppUserPrivacySettings(UUID id, UpdatePrivacySettingsDto updatePrivacySettingsDto) {
+    public AppUserFullInfoDto updateAppUserPrivacySettings(UpdatePrivacySettingsDto updatePrivacySettingsDto) {
         Set<ConstraintViolation<UpdatePrivacySettingsDto>> violations = validator.validate(updatePrivacySettingsDto);
         if (!violations.isEmpty()) {
             throw new ConstraintViolationException(violations);
         }
 
-        AppUserIdentityDto appUserIdentityDto = identityService.currentUser();
-
-        if(identityService.unauthorized(appUserIdentityDto, id)) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
-        }
+        UUID id = identityService.currentUserID();
 
         AppUser existingAppUser = appUserModelById(id);
-
-        // synchronize with identity
-        existingAppUser = appUserMapper.copyFromAppUserIdentityDtoToAppUser(appUserIdentityDto, existingAppUser);
 
         existingAppUser = appUserMapper.copyFromUpdatePrivacySettingsDtoToAppUser(updatePrivacySettingsDto, existingAppUser);
 

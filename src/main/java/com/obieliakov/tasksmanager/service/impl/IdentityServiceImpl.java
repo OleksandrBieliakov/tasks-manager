@@ -7,8 +7,10 @@ import org.keycloak.KeycloakSecurityContext;
 import org.keycloak.representations.AccessToken;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.UUID;
 
@@ -62,7 +64,9 @@ public class IdentityServiceImpl implements IdentityService {
     }
 
     @Override
-    public boolean unauthorized(AppUserIdentityDto currentUser, UUID checkedUserId) {
-        return !currentUser.getId().equals(checkedUserId);
+    public void verifyAuthorization(UUID checkedUserId) {
+        if(unauthorized(checkedUserId)) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Not authorised for access to the user data");
+        }
     }
 }

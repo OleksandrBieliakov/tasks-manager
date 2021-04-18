@@ -10,16 +10,20 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 public interface GroupMembershipRepository extends JpaRepository<GroupMembership, Long> {
 
-    @Query("select gm.appUser from GroupMembership gm where gm.group.id = :group_id")
-    List<AppUser> queryMembersOfGroupWithId(@Param("group_id") Long groupId);
+    @Query("select gm.appUser from GroupMembership gm where gm.group.id = :group_id and gm.active=true")
+    List<AppUser> queryActiveMembersOfGroupWithId(@Param("group_id") Long groupId);
 
     // added to practice custom hql query creation with projection to AppUserShortDto
     @Query("select new com.obieliakov.tasksmanager.dto.appUser.AppUserShortDto(u.id, u.loginName, u.firstName, u.lastName) " +
-            "from GroupMembership gm join gm.appUser u where gm.group.id = :group_id")
-    List<AppUserShortDto> queryMembersShortOfGroupWithId(@Param("group_id") Long groupId);
+            "from GroupMembership gm join gm.appUser u where gm.group.id = :group_id and gm.active=true")
+    List<AppUserShortDto> queryActiveMembersShortOfGroupWithId(@Param("group_id") Long groupId);
 
     Optional<GroupMembership> findByGroupAndAppUserAndActiveTrue(Group group, AppUser appUser);
+
+    @Query("select gm from GroupMembership gm where gm.group.id = :group_id and gm.appUser.id = :app_user_id and gm.active=true")
+    Optional<GroupMembership> queryByGroupIdAndAppUserIdAndActiveTrue(@Param("group_id") Long groupId, @Param("app_user_id")UUID appUserId);
 }

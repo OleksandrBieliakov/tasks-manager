@@ -12,5 +12,5 @@ public interface IdentityService {
 
     boolean unauthorized(UUID checkedUserId);
 
-    boolean unauthorized(AppUserIdentityDto currentUser, UUID checkedUserId);
+    void verifyAuthorization(UUID checkedUserId);
 }

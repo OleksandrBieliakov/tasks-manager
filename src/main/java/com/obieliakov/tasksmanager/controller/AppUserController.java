@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.UUID;
 
 @RestController
-@RequestMapping(value = "/api/users")
+@RequestMapping(value = "api/users")
 @SecurityRequirement(name = "identity")
 public class AppUserController {
 
@@ -18,7 +18,7 @@ public class AppUserController {
         this.appUserService = appUserService;
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("{id}")
     public AppUserDto appUserById(@PathVariable UUID id) {
         return appUserService.appUserById(id, false);
     }
@@ -33,13 +33,13 @@ public class AppUserController {
         return appUserService.createAppUser(newAppUserDto);
     }
 
-    @PatchMapping("/{id}/login-name")
-    public AppUserFullInfoDto updateAppUserLoginName(@PathVariable UUID id, @RequestBody UpdateLoginNameDto updateLoginNameDto) {
-        return appUserService.updateAppUserLoginName(id, updateLoginNameDto);
+    @PatchMapping("login-name")
+    public AppUserFullInfoDto updateAppUserLoginName(@RequestBody UpdateLoginNameDto updateLoginNameDto) {
+        return appUserService.updateAppUserLoginName(updateLoginNameDto);
     }
 
-    @PatchMapping("{id}/privacy")
-    public AppUserFullInfoDto updateAppUserPrivacySettings(@PathVariable UUID id, @RequestBody UpdatePrivacySettingsDto updatePrivacySettingsDto) {
-        return appUserService.updateAppUserPrivacySettings(id, updatePrivacySettingsDto);
+    @PatchMapping("privacy")
+    public AppUserFullInfoDto updateAppUserPrivacySettings(@RequestBody UpdatePrivacySettingsDto updatePrivacySettingsDto) {
+        return appUserService.updateAppUserPrivacySettings(updatePrivacySettingsDto);
     }
 }

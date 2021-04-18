@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping(value = "/api/admin/users")
+@RequestMapping(value = "api/admin/users")
 @SecurityRequirement(name = "identity")
 public class AdminAppUserController {
 
@@ -22,7 +22,7 @@ public class AdminAppUserController {
         this.appUserService = appUserService;
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("{id}")
     public AppUserDto appUserById(@PathVariable UUID id) {
         return appUserService.appUserById(id, true);
     }
