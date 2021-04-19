@@ -5,7 +5,6 @@ import lombok.Data;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.util.UUID;
 
 @Data
 public class NewTaskDto {
@@ -19,9 +18,6 @@ public class NewTaskDto {
 
     @NotNull
     private Long groupId;
-
-    @NotNull
-    private UUID addedByAppUserId;
 
     public void trim() {
         if (title != null) {

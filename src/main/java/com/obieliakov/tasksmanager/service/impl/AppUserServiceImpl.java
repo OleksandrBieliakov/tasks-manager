@@ -2,6 +2,7 @@ package com.obieliakov.tasksmanager.service.impl;
 
 import com.obieliakov.tasksmanager.dto.appUser.*;
 import com.obieliakov.tasksmanager.mapper.AppUserMapper;
+import com.obieliakov.tasksmanager.mapper.AppUserWithPrivacyMapper;
 import com.obieliakov.tasksmanager.model.AppUser;
 import com.obieliakov.tasksmanager.repository.AppUserRepository;
 import com.obieliakov.tasksmanager.service.AppUserService;
@@ -31,15 +32,17 @@ public class AppUserServiceImpl implements AppUserService {
     private final Validator validator;
 
     private final AppUserMapper appUserMapper;
+    private final AppUserWithPrivacyMapper appUserWithPrivacyMapper;
 
     private final AppUserRepository appUserRepository;
 
     private final IdentityService identityService;
 
-    public AppUserServiceImpl(AppUserRepository appUserRepository, AppUserMapper appUserMapper, Validator validator, IdentityService identityService) {
+    public AppUserServiceImpl(AppUserRepository appUserRepository, AppUserMapper appUserMapper, Validator validator, AppUserWithPrivacyMapper appUserWithPrivacyMapper, IdentityService identityService) {
         this.appUserRepository = appUserRepository;
         this.appUserMapper = appUserMapper;
         this.validator = validator;
+        this.appUserWithPrivacyMapper = appUserWithPrivacyMapper;
         this.identityService = identityService;
     }
 
@@ -64,13 +67,17 @@ public class AppUserServiceImpl implements AppUserService {
     @Override
     public AppUserDto appUserById(UUID id, boolean isAdmin) {
         AppUser appUser = appUserModelById(id);
-        return appUserMapper.appUserToAppUserDto(appUser, isAdmin);
+        return isAdmin ?
+                appUserMapper.appUserToAppUserDto(appUser) :
+                appUserWithPrivacyMapper.appUserToAppUserDtoWithPrivacy(appUser);
     }
 
     @Override
     public AppUserDto appUserByLoginName(String loginName, boolean isAdmin) {
         AppUser appUser = appUserModelByLoginName(loginName);
-        return appUserMapper.appUserToAppUserDto(appUser, isAdmin);
+        return isAdmin ?
+                appUserMapper.appUserToAppUserDto(appUser) :
+                appUserWithPrivacyMapper.appUserToAppUserDtoWithPrivacy(appUser);
     }
 
     @Override
@@ -145,6 +152,6 @@ public class AppUserServiceImpl implements AppUserService {
     @Override
     public List<AppUserDto> allAppUsers() {
         List<AppUser> appUsers = appUserRepository.findAll();
-        return appUserMapper.appUserListToAppUserDtoListUnconditional(appUsers);
+        return appUserMapper.appUserListToAppUserDtoList(appUsers);
     }
 }

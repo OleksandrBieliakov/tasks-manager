@@ -3,10 +3,13 @@ package com.obieliakov.tasksmanager.service;
 import com.obieliakov.tasksmanager.dto.statusupdate.NewStatusUpdateDto;
 import com.obieliakov.tasksmanager.dto.statusupdate.StatusUpdateDto;
 import com.obieliakov.tasksmanager.dto.task.*;
+import com.obieliakov.tasksmanager.model.Task;
 
 import java.util.List;
 
 public interface TaskService {
+
+    Task taskModelById(Long id);
 
     NewTaskCreatedDto createTask(NewTaskDto newTaskDto);
 

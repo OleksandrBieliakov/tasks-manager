@@ -2,13 +2,16 @@ package com.obieliakov.tasksmanager.mapper;
 
 import com.obieliakov.tasksmanager.dto.task.*;
 import com.obieliakov.tasksmanager.model.Task;
+import org.mapstruct.InjectionStrategy;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 
 import java.util.List;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring",
+        uses = AppUserWithPrivacyMapper.class,
+        injectionStrategy = InjectionStrategy.CONSTRUCTOR)
 public interface TaskMapper {
 
     TaskAssignedToDto taskToTaskAssignedToDto(Task task);

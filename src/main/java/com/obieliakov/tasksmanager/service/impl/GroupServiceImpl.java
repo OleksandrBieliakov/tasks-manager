@@ -5,6 +5,7 @@ import com.obieliakov.tasksmanager.dto.appUser.AppUserShortDto;
 import com.obieliakov.tasksmanager.dto.group.*;
 import com.obieliakov.tasksmanager.dto.task.TaskAssignedToDto;
 import com.obieliakov.tasksmanager.mapper.AppUserMapper;
+import com.obieliakov.tasksmanager.mapper.AppUserWithPrivacyMapper;
 import com.obieliakov.tasksmanager.mapper.GroupMapper;
 import com.obieliakov.tasksmanager.mapper.TaskMapper;
 import com.obieliakov.tasksmanager.model.*;
@@ -39,6 +40,7 @@ public class GroupServiceImpl implements GroupService {
     private final Validator validator;
 
     private final AppUserMapper appUserMapper;
+    private final AppUserWithPrivacyMapper appUserWithPrivacyMapper;
     private final GroupMapper groupMapper;
     private final TaskMapper taskMapper;
 
@@ -50,9 +52,10 @@ public class GroupServiceImpl implements GroupService {
     private final AppUserService appUserService;
 
 
-    public GroupServiceImpl(Validator validator, AppUserMapper appUserMapper, GroupMapper groupMapper, TaskMapper taskMapper, GroupRepository groupRepository, GroupMembershipRepository groupMembershipRepository, IdentityService identityService, GroupMembershipService groupMembershipService, AppUserService appUserService) {
+    public GroupServiceImpl(Validator validator, AppUserMapper appUserMapper, AppUserWithPrivacyMapper appUserWithPrivacyMapper, GroupMapper groupMapper, TaskMapper taskMapper, GroupRepository groupRepository, GroupMembershipRepository groupMembershipRepository, IdentityService identityService, GroupMembershipService groupMembershipService, AppUserService appUserService) {
         this.validator = validator;
         this.appUserMapper = appUserMapper;
+        this.appUserWithPrivacyMapper = appUserWithPrivacyMapper;
         this.groupMapper = groupMapper;
         this.taskMapper = taskMapper;
         this.groupRepository = groupRepository;
@@ -82,7 +85,7 @@ public class GroupServiceImpl implements GroupService {
 
     @Override
     public GroupInfoDto groupInfoById(Long id, boolean isAdmin) {
-        if(!isAdmin) {
+        if (!isAdmin) {
             groupMembershipService.verifyCurrentUserMembership(id);
         }
         Group group = groupModelById(id);
@@ -125,7 +128,7 @@ public class GroupServiceImpl implements GroupService {
 
     @Override
     public GroupMembersDto groupMembersById(Long id, boolean isAdmin) {
-        if(!isAdmin) {
+        if (!isAdmin) {
             groupMembershipService.verifyCurrentUserMembership(id);
         }
 
@@ -133,7 +136,9 @@ public class GroupServiceImpl implements GroupService {
 
         List<AppUser> appUserList = groupMembershipRepository.queryActiveMembersOfGroupWithId(id);
 
-        List<AppUserDto> appUserDtoList = appUserMapper.appUserListToAppUserDtoList(appUserList, isAdmin);
+        List<AppUserDto> appUserDtoList = isAdmin ?
+                appUserMapper.appUserListToAppUserDtoList(appUserList) :
+                appUserWithPrivacyMapper.appUserListToAppUserDtoListWithPrivacy(appUserList);
 
         GroupMembersDto groupMembersDto = groupMapper.groupToGroupMembersDto(group);
         groupMembersDto.setMembers(appUserDtoList);
@@ -142,7 +147,7 @@ public class GroupServiceImpl implements GroupService {
 
     @Override
     public GroupTasksDto groupTasksById(Long id, boolean isAdmin) {
-        if(!isAdmin) {
+        if (!isAdmin) {
             groupMembershipService.verifyCurrentUserMembership(id);
         }
 
@@ -156,7 +161,10 @@ public class GroupServiceImpl implements GroupService {
             List<AppUser> assignedAppUsers = task.getAssignments().stream()
                     .map(Assignment::getAssignedTo).collect(Collectors.toList());
 
-            List<AppUserDto> appUserDtoList = appUserMapper.appUserListToAppUserDtoList(assignedAppUsers, isAdmin);
+            List<AppUserDto> appUserDtoList = isAdmin ?
+                    appUserMapper.appUserListToAppUserDtoList(assignedAppUsers) :
+                    appUserWithPrivacyMapper.appUserListToAppUserDtoListWithPrivacy(assignedAppUsers);
+
             taskAssignedToDto.setAssignedTo(appUserDtoList);
 
             return taskAssignedToDto;

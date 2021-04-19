@@ -1,5 +1,6 @@
 package com.obieliakov.tasksmanager.dto.task;
 
+import com.obieliakov.tasksmanager.dto.appUser.AppUserDto;
 import com.obieliakov.tasksmanager.dto.statusupdate.StatusUpdateDto;
 import com.obieliakov.tasksmanager.model.TaskStatus;
 import lombok.Data;
@@ -14,5 +15,6 @@ public class TaskStatusUpdatesDto {
     private String title;
     private TaskStatus status;
     private ZonedDateTime timeAdded;
+    private AppUserDto addedBy;
     private List<StatusUpdateDto> statusUpdates;
 }

@@ -50,12 +50,12 @@ public class Task {
     private AppUser addedBy;
 
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @OneToMany(mappedBy = "task")
+    @OneToMany(mappedBy = "task", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<Assignment> assignments;
 
-    @OneToMany(mappedBy = "task")
+    @OneToMany(mappedBy = "task", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<StatusUpdate> statusUpdates;
 
-    @OneToMany(mappedBy = "task")
+    @OneToMany(mappedBy = "task", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<Comment> comments;
 }
