@@ -3,6 +3,7 @@ package com.obieliakov.tasksmanager.service.impl;
 import com.obieliakov.tasksmanager.dto.appUser.AppUserDto;
 import com.obieliakov.tasksmanager.dto.appUser.AppUserShortDto;
 import com.obieliakov.tasksmanager.dto.group.*;
+import com.obieliakov.tasksmanager.dto.groupinvite.GroupInviteAcceptedDto;
 import com.obieliakov.tasksmanager.dto.groupinvite.GroupInviteDto;
 import com.obieliakov.tasksmanager.dto.groupinvite.NewGroupInviteDto;
 import com.obieliakov.tasksmanager.dto.task.TaskAssignedToDto;
@@ -84,6 +85,15 @@ public class GroupServiceImpl implements GroupService {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Group not found");
         }
         return group.get();
+    }
+
+    @Override
+    public GroupInvite groupInviteModelById(Long id) {
+        Optional<GroupInvite> groupInvite = groupInviteRepository.findById(id);
+        if (groupInvite.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Group invite not found");
+        }
+        return groupInvite.get();
     }
 
     @Override
@@ -191,7 +201,7 @@ public class GroupServiceImpl implements GroupService {
 
         groupMembershipService.verifyMembership(currentAppUserId, groupId);
 
-        if(groupMembershipService.isAppUserMemberOfGroup(invitedAppUserId, groupId)) {
+        if (groupMembershipService.isAppUserMemberOfGroup(invitedAppUserId, groupId)) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Invited user is already a group member");
         }
 
@@ -199,8 +209,8 @@ public class GroupServiceImpl implements GroupService {
         AppUser invitedAppUser = appUserService.appUserModelById(invitedAppUserId);
         AppUser currentAppUSer = appUserService.appUserModelById(currentAppUserId);
 
-        Optional<GroupInvite> existingGroupInvite = groupInviteRepository.findByGroupAndAndToAppUserAndByAppUser(group, invitedAppUser, currentAppUSer);
-        if(existingGroupInvite.isPresent()) {
+        Optional<GroupInvite> existingGroupInvite = groupInviteRepository.findByGroupAndToAppUserAndByAppUser(group, invitedAppUser, currentAppUSer);
+        if (existingGroupInvite.isPresent()) {
             return groupInviteMapper.groupInviteToGroupInviteDto(existingGroupInvite.get());
         }
 
@@ -211,6 +221,38 @@ public class GroupServiceImpl implements GroupService {
 
         GroupInvite createdGroupInvite = groupInviteRepository.save(newGroupInvite);
         return groupInviteMapper.groupInviteToGroupInviteDto(createdGroupInvite);
+    }
+
+    @Override
+    public GroupInviteAcceptedDto acceptGroupInvite(Long id) {
+        GroupInvite groupInvite = groupInviteModelById(id);
+
+        AppUser toAppUser = groupInvite.getToAppUser();
+        identityService.verifyAuthorization(toAppUser.getId());
+
+        Group group = groupInvite.getGroup();
+        if(!groupMembershipService.isAppUserMemberOfGroup(groupInvite.getByAppUser().getId(), group.getId())) {
+            groupInviteRepository.delete(groupInvite);
+            return new GroupInviteAcceptedDto(); // TODO exception but with commit of delete ?
+        }
+
+        GroupMembership groupMembership = new GroupMembership();
+        groupMembership.setAppUser(toAppUser);
+        groupMembership.setGroup(group);
+        groupMembershipRepository.save(groupMembership);
+
+        groupInviteRepository.deleteAllByGroupAndToAppUser(group, toAppUser);
+
+        GroupInviteAcceptedDto groupInviteAcceptedDto = new GroupInviteAcceptedDto();
+        groupInviteAcceptedDto.setGroupInfoDto(groupMapper.groupToGroupInfoDto(group));
+        return groupInviteAcceptedDto;
+    }
+
+    @Override
+    public void declineGroupInvite(Long id) {
+        GroupInvite groupInvite = groupInviteModelById(id);
+        identityService.verifyAuthorization(groupInvite.getToAppUser().getId());
+        groupInviteRepository.delete(groupInvite);
     }
 
     @Override

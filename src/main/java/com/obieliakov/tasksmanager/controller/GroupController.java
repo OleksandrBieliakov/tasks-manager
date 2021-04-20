@@ -4,6 +4,7 @@ import com.obieliakov.tasksmanager.dto.group.GroupInfoDto;
 import com.obieliakov.tasksmanager.dto.group.GroupMembersDto;
 import com.obieliakov.tasksmanager.dto.group.GroupTasksDto;
 import com.obieliakov.tasksmanager.dto.group.NewOrUpdateGroupDto;
+import com.obieliakov.tasksmanager.dto.groupinvite.GroupInviteAcceptedDto;
 import com.obieliakov.tasksmanager.dto.groupinvite.GroupInviteDto;
 import com.obieliakov.tasksmanager.dto.groupinvite.NewGroupInviteDto;
 import com.obieliakov.tasksmanager.service.GroupService;
@@ -41,7 +42,6 @@ public class GroupController {
         return groupService.groupMembersById(id, false);
     }
 
-
     @GetMapping("{id}/tasks")
     public GroupTasksDto groupTasks(@PathVariable Long id) {
         return groupService.groupTasksById(id, false);
@@ -50,5 +50,15 @@ public class GroupController {
     @PostMapping("invite")
     public GroupInviteDto createGroupInvite(@RequestBody NewGroupInviteDto newGroupInviteDto) {
         return groupService.createGroupInvite(newGroupInviteDto);
+    }
+
+    @PatchMapping("invite/{id}")
+    public GroupInviteAcceptedDto acceptGroupInvite(@PathVariable Long id) {
+        return groupService.acceptGroupInvite(id);
+    }
+
+    @DeleteMapping("invite/{id}")
+    public void declineGroupInvite(@PathVariable Long id) {
+        groupService.declineGroupInvite(id);
     }
 }

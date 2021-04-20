@@ -220,9 +220,11 @@ public class DatabaseLoader implements CommandLineRunner {
 
         GroupInvite group1ByAppUser1ToAppUser6 = groupInviteFactory.generateAndInit(group1, appUser1, appUser6);
         GroupInvite group1ByAppUser2ToAppUser6 = groupInviteFactory.generateAndInit(group1, appUser2, appUser6);
+        GroupInvite group2ByAppUser2ToAppUser6 = groupInviteFactory.generateAndInit(group2, appUser2, appUser6);
 
         groupInviteRepository.save(group1ByAppUser1ToAppUser6);
         groupInviteRepository.save(group1ByAppUser2ToAppUser6);
+        groupInviteRepository.save(group2ByAppUser2ToAppUser6);
 
 
         Comment comment1Group1Task6AddedByAppUser2 = commentFactory.generateAndInit(task6Group1AppUser3Done, appUser2);

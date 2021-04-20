@@ -9,5 +9,7 @@ import java.util.Optional;
 
 public interface GroupInviteRepository extends JpaRepository<GroupInvite, Long> {
 
-    Optional<GroupInvite> findByGroupAndAndToAppUserAndByAppUser(Group group, AppUser toAppUser, AppUser byAppUser);
+    Optional<GroupInvite> findByGroupAndToAppUserAndByAppUser(Group group, AppUser toAppUser, AppUser byAppUser);
+
+    void deleteAllByGroupAndToAppUser(Group group, AppUser toAppUser);
 }
