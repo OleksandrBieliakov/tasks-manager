@@ -16,6 +16,10 @@ public interface AppUserService {
 
     AppUserDto appUserByLoginName(String loginName, boolean isAdmin);
 
+    AppUser synchroniseWithIdentity();
+
+    AppUserFullInfoDto profile();
+
     AppUserFullInfoDto createAppUser(NewAppUserDto newAppUserDto);
 
     AppUserFullInfoDto updateAppUserLoginName(UpdateLoginNameDto updateLoginNameDto);

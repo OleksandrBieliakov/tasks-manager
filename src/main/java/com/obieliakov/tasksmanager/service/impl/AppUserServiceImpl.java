@@ -81,6 +81,20 @@ public class AppUserServiceImpl implements AppUserService {
     }
 
     @Override
+    public AppUser synchroniseWithIdentity() {
+        AppUserIdentityDto appUserIdentityDto = identityService.currentUser();
+        AppUser existingAppUser = appUserModelById(appUserIdentityDto.getId());
+        AppUser synchronizedAppUser = appUserMapper.copyFromAppUserIdentityDtoToAppUser(appUserIdentityDto, existingAppUser);
+        return appUserRepository.save(synchronizedAppUser);
+    }
+
+    @Override
+    public AppUserFullInfoDto profile() {
+        AppUser synchronisedAppUser = synchroniseWithIdentity();
+        return appUserMapper.appUserToAppUserFullInfoDto(synchronisedAppUser);
+    }
+
+    @Override
     public AppUserFullInfoDto createAppUser(NewAppUserDto newAppUserDto) {
         newAppUserDto.trim();
 

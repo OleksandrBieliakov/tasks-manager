@@ -18,6 +18,11 @@ public class AppUserController {
         this.appUserService = appUserService;
     }
 
+    @GetMapping
+    public AppUserFullInfoDto profile(){
+        return appUserService.profile();
+    }
+
     @GetMapping("{id}")
     public AppUserDto appUserById(@PathVariable UUID id) {
         return appUserService.appUserById(id, false);
