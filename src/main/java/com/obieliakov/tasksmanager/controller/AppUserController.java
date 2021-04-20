@@ -52,4 +52,9 @@ public class AppUserController {
     public AppUserGroupsDto appUserGroups() {
         return appUserService.appUserGroups();
     }
+
+    @GetMapping("invites")
+    public AppUserReceivedGroupInvitesDto  appUserReceivedGroupInvites() {
+        return appUserService.appUserReceivedGroupInvites();
+    }
 }

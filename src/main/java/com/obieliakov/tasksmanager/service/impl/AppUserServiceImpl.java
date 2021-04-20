@@ -2,11 +2,14 @@ package com.obieliakov.tasksmanager.service.impl;
 
 import com.obieliakov.tasksmanager.dto.appUser.*;
 import com.obieliakov.tasksmanager.dto.group.GroupInfoDto;
+import com.obieliakov.tasksmanager.dto.groupinvite.GroupInviteDto;
 import com.obieliakov.tasksmanager.mapper.AppUserMapper;
 import com.obieliakov.tasksmanager.mapper.AppUserWithPrivacyMapper;
+import com.obieliakov.tasksmanager.mapper.GroupInviteMapper;
 import com.obieliakov.tasksmanager.mapper.GroupMapper;
 import com.obieliakov.tasksmanager.model.AppUser;
 import com.obieliakov.tasksmanager.model.Group;
+import com.obieliakov.tasksmanager.model.GroupInvite;
 import com.obieliakov.tasksmanager.model.GroupMembership;
 import com.obieliakov.tasksmanager.repository.AppUserRepository;
 import com.obieliakov.tasksmanager.service.AppUserService;
@@ -39,17 +42,19 @@ public class AppUserServiceImpl implements AppUserService {
     private final AppUserMapper appUserMapper;
     private final AppUserWithPrivacyMapper appUserWithPrivacyMapper;
     private final GroupMapper groupMapper;
+    private final GroupInviteMapper groupInviteMapper;
 
     private final AppUserRepository appUserRepository;
 
     private final IdentityService identityService;
 
-    public AppUserServiceImpl(AppUserRepository appUserRepository, AppUserMapper appUserMapper, Validator validator, AppUserWithPrivacyMapper appUserWithPrivacyMapper, GroupMapper groupMapper, IdentityService identityService) {
+    public AppUserServiceImpl(AppUserRepository appUserRepository, AppUserMapper appUserMapper, Validator validator, AppUserWithPrivacyMapper appUserWithPrivacyMapper, GroupMapper groupMapper, GroupInviteMapper groupInviteMapper, IdentityService identityService) {
         this.appUserRepository = appUserRepository;
         this.appUserMapper = appUserMapper;
         this.validator = validator;
         this.appUserWithPrivacyMapper = appUserWithPrivacyMapper;
         this.groupMapper = groupMapper;
+        this.groupInviteMapper = groupInviteMapper;
         this.identityService = identityService;
     }
 
@@ -180,6 +185,18 @@ public class AppUserServiceImpl implements AppUserService {
         appUserGroupsDto.setId(currentUserId);
         appUserGroupsDto.setGroupInfoDtoList(groupInfoDtoList);
         return appUserGroupsDto;
+    }
+
+    @Override
+    public AppUserReceivedGroupInvitesDto appUserReceivedGroupInvites() {
+        AppUser currentAppUser = appUserModelById(identityService.currentUserID());
+
+        List<GroupInvite> groupInvites = currentAppUser.getGroupInvitesReceived();
+        List<GroupInviteDto> groupInviteDtoList = groupInviteMapper.groupInviteListToGroupInviteDtoList(groupInvites);
+
+        AppUserReceivedGroupInvitesDto appUserInvites = new AppUserReceivedGroupInvitesDto();
+        appUserInvites.setReceivedGroupInvites(groupInviteDtoList);
+        return appUserInvites;
     }
 
     @Override

@@ -28,5 +28,7 @@ public interface AppUserService {
 
     AppUserGroupsDto appUserGroups();
 
+    AppUserReceivedGroupInvitesDto appUserReceivedGroupInvites();
+
     List<AppUserDto> allAppUsers();
 }
