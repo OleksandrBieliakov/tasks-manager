@@ -1,9 +1,13 @@
 package com.obieliakov.tasksmanager.service.impl;
 
 import com.obieliakov.tasksmanager.dto.appUser.*;
+import com.obieliakov.tasksmanager.dto.group.GroupInfoDto;
 import com.obieliakov.tasksmanager.mapper.AppUserMapper;
 import com.obieliakov.tasksmanager.mapper.AppUserWithPrivacyMapper;
+import com.obieliakov.tasksmanager.mapper.GroupMapper;
 import com.obieliakov.tasksmanager.model.AppUser;
+import com.obieliakov.tasksmanager.model.Group;
+import com.obieliakov.tasksmanager.model.GroupMembership;
 import com.obieliakov.tasksmanager.repository.AppUserRepository;
 import com.obieliakov.tasksmanager.service.AppUserService;
 import com.obieliakov.tasksmanager.service.IdentityService;
@@ -21,6 +25,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -33,16 +38,18 @@ public class AppUserServiceImpl implements AppUserService {
 
     private final AppUserMapper appUserMapper;
     private final AppUserWithPrivacyMapper appUserWithPrivacyMapper;
+    private final GroupMapper groupMapper;
 
     private final AppUserRepository appUserRepository;
 
     private final IdentityService identityService;
 
-    public AppUserServiceImpl(AppUserRepository appUserRepository, AppUserMapper appUserMapper, Validator validator, AppUserWithPrivacyMapper appUserWithPrivacyMapper, IdentityService identityService) {
+    public AppUserServiceImpl(AppUserRepository appUserRepository, AppUserMapper appUserMapper, Validator validator, AppUserWithPrivacyMapper appUserWithPrivacyMapper, GroupMapper groupMapper, IdentityService identityService) {
         this.appUserRepository = appUserRepository;
         this.appUserMapper = appUserMapper;
         this.validator = validator;
         this.appUserWithPrivacyMapper = appUserWithPrivacyMapper;
+        this.groupMapper = groupMapper;
         this.identityService = identityService;
     }
 
@@ -161,6 +168,18 @@ public class AppUserServiceImpl implements AppUserService {
 
         AppUser updatedAppUser = appUserRepository.save(existingAppUser);
         return appUserMapper.appUserToAppUserFullInfoDto(updatedAppUser);
+    }
+
+    @Override
+    public AppUserGroupsDto appUserGroups() {
+        UUID currentUserId = identityService.currentUserID();
+        AppUser currentAppUser = appUserModelById(currentUserId);
+        List<Group> appUserGroups = currentAppUser.getGroupMemberships().stream().map(GroupMembership::getGroup).collect(Collectors.toList());
+        List<GroupInfoDto> groupInfoDtoList = groupMapper.groupListToGroupInfoDtoList(appUserGroups);
+        AppUserGroupsDto appUserGroupsDto = new AppUserGroupsDto();
+        appUserGroupsDto.setId(currentUserId);
+        appUserGroupsDto.setGroupInfoDtoList(groupInfoDtoList);
+        return appUserGroupsDto;
     }
 
     @Override

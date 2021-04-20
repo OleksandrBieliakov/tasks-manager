@@ -47,4 +47,9 @@ public class AppUserController {
     public AppUserFullInfoDto updateAppUserPrivacySettings(@RequestBody UpdatePrivacySettingsDto updatePrivacySettingsDto) {
         return appUserService.updateAppUserPrivacySettings(updatePrivacySettingsDto);
     }
+
+    @GetMapping("groups")
+    public AppUserGroupsDto appUserGroups() {
+        return appUserService.appUserGroups();
+    }
 }

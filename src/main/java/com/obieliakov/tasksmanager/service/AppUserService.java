@@ -26,5 +26,7 @@ public interface AppUserService {
 
     AppUserFullInfoDto updateAppUserPrivacySettings(UpdatePrivacySettingsDto updatePrivacySettingsDto);
 
+    AppUserGroupsDto appUserGroups();
+
     List<AppUserDto> allAppUsers();
 }
