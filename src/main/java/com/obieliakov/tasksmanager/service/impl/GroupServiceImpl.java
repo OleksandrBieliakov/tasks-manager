@@ -26,6 +26,7 @@ import org.springframework.web.server.ResponseStatusException;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import javax.validation.Validator;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -253,6 +254,18 @@ public class GroupServiceImpl implements GroupService {
         GroupInvite groupInvite = groupInviteModelById(id);
         identityService.verifyAuthorization(groupInvite.getToAppUser().getId());
         groupInviteRepository.delete(groupInvite);
+    }
+
+    @Override
+    public void leaveGroup(Long id) {
+        Optional<GroupMembership> groupMembershipOptional = groupMembershipRepository.queryByGroupIdAndAppUserIdAndActiveTrue(id, identityService.currentUserID());
+        if(groupMembershipOptional.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "User is not a member of a group");
+        }
+        GroupMembership groupMembership = groupMembershipOptional.get();
+        groupMembership.setActive(false);
+        groupMembership.setLastTimeLeft(ZonedDateTime.now());
+        groupMembershipRepository.save(groupMembership);
     }
 
     @Override

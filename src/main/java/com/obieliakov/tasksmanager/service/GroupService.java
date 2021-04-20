@@ -31,6 +31,8 @@ public interface GroupService {
 
     void declineGroupInvite(Long id);
 
+    void leaveGroup(Long id);
+
     List<GroupInfoDto> allGroups();
 
     GroupMembersShortDto groupMembersShortById(Long id);
