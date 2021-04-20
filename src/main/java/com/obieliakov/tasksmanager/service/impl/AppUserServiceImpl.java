@@ -10,8 +10,8 @@ import com.obieliakov.tasksmanager.mapper.GroupMapper;
 import com.obieliakov.tasksmanager.model.AppUser;
 import com.obieliakov.tasksmanager.model.Group;
 import com.obieliakov.tasksmanager.model.GroupInvite;
-import com.obieliakov.tasksmanager.model.GroupMembership;
 import com.obieliakov.tasksmanager.repository.AppUserRepository;
+import com.obieliakov.tasksmanager.repository.GroupMembershipRepository;
 import com.obieliakov.tasksmanager.service.AppUserService;
 import com.obieliakov.tasksmanager.service.IdentityService;
 import org.slf4j.Logger;
@@ -28,7 +28,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -45,16 +44,18 @@ public class AppUserServiceImpl implements AppUserService {
     private final GroupInviteMapper groupInviteMapper;
 
     private final AppUserRepository appUserRepository;
+    private final GroupMembershipRepository groupMembershipRepository;
 
     private final IdentityService identityService;
 
-    public AppUserServiceImpl(AppUserRepository appUserRepository, AppUserMapper appUserMapper, Validator validator, AppUserWithPrivacyMapper appUserWithPrivacyMapper, GroupMapper groupMapper, GroupInviteMapper groupInviteMapper, IdentityService identityService) {
+    public AppUserServiceImpl(AppUserRepository appUserRepository, AppUserMapper appUserMapper, Validator validator, AppUserWithPrivacyMapper appUserWithPrivacyMapper, GroupMapper groupMapper, GroupInviteMapper groupInviteMapper, GroupMembershipRepository groupMembershipRepository, IdentityService identityService) {
         this.appUserRepository = appUserRepository;
         this.appUserMapper = appUserMapper;
         this.validator = validator;
         this.appUserWithPrivacyMapper = appUserWithPrivacyMapper;
         this.groupMapper = groupMapper;
         this.groupInviteMapper = groupInviteMapper;
+        this.groupMembershipRepository = groupMembershipRepository;
         this.identityService = identityService;
     }
 
@@ -178,8 +179,7 @@ public class AppUserServiceImpl implements AppUserService {
     @Override
     public AppUserGroupsDto appUserGroups() {
         UUID currentUserId = identityService.currentUserID();
-        AppUser currentAppUser = appUserModelById(currentUserId);
-        List<Group> appUserGroups = currentAppUser.getGroupMemberships().stream().map(GroupMembership::getGroup).collect(Collectors.toList());
+        List<Group> appUserGroups = groupMembershipRepository.queryGroupsWithAppUserActiveMembership(currentUserId);
         List<GroupInfoDto> groupInfoDtoList = groupMapper.groupListToGroupInfoDtoList(appUserGroups);
         AppUserGroupsDto appUserGroupsDto = new AppUserGroupsDto();
         appUserGroupsDto.setId(currentUserId);
