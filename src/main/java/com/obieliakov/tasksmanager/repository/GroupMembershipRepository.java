@@ -22,7 +22,7 @@ public interface GroupMembershipRepository extends JpaRepository<GroupMembership
             "from GroupMembership gm join gm.appUser u where gm.group.id = :group_id and gm.active=true")
     List<AppUserShortDto> queryActiveMembersShortOfGroupWithId(@Param("group_id") Long groupId);
 
-    Optional<GroupMembership> findByGroupAndAppUserAndActiveTrue(Group group, AppUser appUser);
+    Optional<GroupMembership> findByGroupAndAppUser(Group group, AppUser appUser);
 
     @Query("select gm from GroupMembership gm where gm.group.id = :group_id and gm.appUser.id = :app_user_id and gm.active=true")
     Optional<GroupMembership> queryByGroupIdAndAppUserIdAndActiveTrue(@Param("group_id") Long groupId, @Param("app_user_id")UUID appUserId);

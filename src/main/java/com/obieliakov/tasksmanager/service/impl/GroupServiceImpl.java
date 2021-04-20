@@ -232,14 +232,28 @@ public class GroupServiceImpl implements GroupService {
         identityService.verifyAuthorization(toAppUser.getId());
 
         Group group = groupInvite.getGroup();
+
+        // user who made an invite is no longer a group member
         if(!groupMembershipService.isAppUserMemberOfGroup(groupInvite.getByAppUser().getId(), group.getId())) {
             groupInviteRepository.delete(groupInvite);
             return new GroupInviteAcceptedDto(); // TODO exception but with commit of delete ?
         }
 
-        GroupMembership groupMembership = new GroupMembership();
-        groupMembership.setAppUser(toAppUser);
-        groupMembership.setGroup(group);
+        Optional<GroupMembership> groupMembershipOptional = groupMembershipRepository.findByGroupAndAppUser(group, toAppUser);
+        GroupMembership groupMembership;
+
+        if(groupMembershipOptional.isPresent() && !groupMembershipOptional.get().isActive()) {
+            groupMembership = groupMembershipOptional.get();
+            groupMembership.setActive(true);
+            groupMembership.setLastTimeJoined(ZonedDateTime.now());
+        } else if(groupMembershipOptional.isEmpty()){
+            groupMembership = new GroupMembership();
+            groupMembership.setAppUser(toAppUser);
+            groupMembership.setGroup(group);
+        } else { // unexpected
+            groupMembership = groupMembershipOptional.get();
+        }
+
         groupMembershipRepository.save(groupMembership);
 
         groupInviteRepository.deleteAllByGroupAndToAppUser(group, toAppUser);
