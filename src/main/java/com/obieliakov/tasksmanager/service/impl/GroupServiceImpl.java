@@ -3,12 +3,12 @@ package com.obieliakov.tasksmanager.service.impl;
 import com.obieliakov.tasksmanager.dto.appUser.AppUserDto;
 import com.obieliakov.tasksmanager.dto.appUser.AppUserShortDto;
 import com.obieliakov.tasksmanager.dto.group.*;
+import com.obieliakov.tasksmanager.dto.groupinvite.GroupInviteDto;
+import com.obieliakov.tasksmanager.dto.groupinvite.NewGroupInviteDto;
 import com.obieliakov.tasksmanager.dto.task.TaskAssignedToDto;
-import com.obieliakov.tasksmanager.mapper.AppUserMapper;
-import com.obieliakov.tasksmanager.mapper.AppUserWithPrivacyMapper;
-import com.obieliakov.tasksmanager.mapper.GroupMapper;
-import com.obieliakov.tasksmanager.mapper.TaskMapper;
+import com.obieliakov.tasksmanager.mapper.*;
 import com.obieliakov.tasksmanager.model.*;
+import com.obieliakov.tasksmanager.repository.GroupInviteRepository;
 import com.obieliakov.tasksmanager.repository.GroupMembershipRepository;
 import com.obieliakov.tasksmanager.repository.GroupRepository;
 import com.obieliakov.tasksmanager.service.AppUserService;
@@ -43,23 +43,26 @@ public class GroupServiceImpl implements GroupService {
     private final AppUserWithPrivacyMapper appUserWithPrivacyMapper;
     private final GroupMapper groupMapper;
     private final TaskMapper taskMapper;
+    private final GroupInviteMapper groupInviteMapper;
 
     private final GroupRepository groupRepository;
     private final GroupMembershipRepository groupMembershipRepository;
+    private final GroupInviteRepository groupInviteRepository;
 
     private final IdentityService identityService;
     private final GroupMembershipService groupMembershipService;
     private final AppUserService appUserService;
 
-
-    public GroupServiceImpl(Validator validator, AppUserMapper appUserMapper, AppUserWithPrivacyMapper appUserWithPrivacyMapper, GroupMapper groupMapper, TaskMapper taskMapper, GroupRepository groupRepository, GroupMembershipRepository groupMembershipRepository, IdentityService identityService, GroupMembershipService groupMembershipService, AppUserService appUserService) {
+    public GroupServiceImpl(Validator validator, AppUserMapper appUserMapper, AppUserWithPrivacyMapper appUserWithPrivacyMapper, GroupMapper groupMapper, TaskMapper taskMapper, GroupInviteMapper groupInviteMapper, GroupRepository groupRepository, GroupMembershipRepository groupMembershipRepository, GroupInviteRepository groupInviteRepository, IdentityService identityService, GroupMembershipService groupMembershipService, AppUserService appUserService) {
         this.validator = validator;
         this.appUserMapper = appUserMapper;
         this.appUserWithPrivacyMapper = appUserWithPrivacyMapper;
         this.groupMapper = groupMapper;
         this.taskMapper = taskMapper;
+        this.groupInviteMapper = groupInviteMapper;
         this.groupRepository = groupRepository;
         this.groupMembershipRepository = groupMembershipRepository;
+        this.groupInviteRepository = groupInviteRepository;
         this.identityService = identityService;
         this.groupMembershipService = groupMembershipService;
         this.appUserService = appUserService;
@@ -173,6 +176,41 @@ public class GroupServiceImpl implements GroupService {
         GroupTasksDto groupTasksDto = groupMapper.groupToGroupTasksDto(group);
         groupTasksDto.setTasks(taskAssignedToDtoList);
         return groupTasksDto;
+    }
+
+    @Override
+    public GroupInviteDto createGroupInvite(NewGroupInviteDto newGroupInviteDto) {
+        Set<ConstraintViolation<NewGroupInviteDto>> violations = validator.validate(newGroupInviteDto);
+        if (!violations.isEmpty()) {
+            throw new ConstraintViolationException(violations);
+        }
+
+        Long groupId = newGroupInviteDto.getGroupId();
+        UUID invitedAppUserId = newGroupInviteDto.getInvitedAppUserId();
+        UUID currentAppUserId = identityService.currentUserID();
+
+        groupMembershipService.verifyMembership(currentAppUserId, groupId);
+
+        if(groupMembershipService.isAppUserMemberOfGroup(invitedAppUserId, groupId)) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Invited user is already a group member");
+        }
+
+        Group group = groupModelById(groupId);
+        AppUser invitedAppUser = appUserService.appUserModelById(invitedAppUserId);
+        AppUser currentAppUSer = appUserService.appUserModelById(currentAppUserId);
+
+        Optional<GroupInvite> existingGroupInvite = groupInviteRepository.findByGroupAndAndToAppUserAndByAppUser(group, invitedAppUser, currentAppUSer);
+        if(existingGroupInvite.isPresent()) {
+            return groupInviteMapper.groupInviteToGroupInviteDto(existingGroupInvite.get());
+        }
+
+        GroupInvite newGroupInvite = new GroupInvite();
+        newGroupInvite.setGroup(group);
+        newGroupInvite.setToAppUser(invitedAppUser);
+        newGroupInvite.setByAppUser(currentAppUSer);
+
+        GroupInvite createdGroupInvite = groupInviteRepository.save(newGroupInvite);
+        return groupInviteMapper.groupInviteToGroupInviteDto(createdGroupInvite);
     }
 
     @Override

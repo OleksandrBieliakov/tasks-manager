@@ -1,6 +1,8 @@
 package com.obieliakov.tasksmanager.service;
 
 import com.obieliakov.tasksmanager.dto.group.*;
+import com.obieliakov.tasksmanager.dto.groupinvite.GroupInviteDto;
+import com.obieliakov.tasksmanager.dto.groupinvite.NewGroupInviteDto;
 import com.obieliakov.tasksmanager.model.Group;
 
 import java.util.List;
@@ -18,6 +20,8 @@ public interface GroupService {
     GroupMembersDto groupMembersById(Long id, boolean isAdmin);
 
     GroupTasksDto groupTasksById(Long id, boolean isAdmin);
+
+    GroupInviteDto createGroupInvite(NewGroupInviteDto newGroupInviteDto);
 
     List<GroupInfoDto> allGroups();
 

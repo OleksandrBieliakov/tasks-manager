@@ -4,6 +4,8 @@ import com.obieliakov.tasksmanager.dto.group.GroupInfoDto;
 import com.obieliakov.tasksmanager.dto.group.GroupMembersDto;
 import com.obieliakov.tasksmanager.dto.group.GroupTasksDto;
 import com.obieliakov.tasksmanager.dto.group.NewOrUpdateGroupDto;
+import com.obieliakov.tasksmanager.dto.groupinvite.GroupInviteDto;
+import com.obieliakov.tasksmanager.dto.groupinvite.NewGroupInviteDto;
 import com.obieliakov.tasksmanager.service.GroupService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.web.bind.annotation.*;
@@ -43,5 +45,10 @@ public class GroupController {
     @GetMapping("{id}/tasks")
     public GroupTasksDto groupTasks(@PathVariable Long id) {
         return groupService.groupTasksById(id, false);
+    }
+
+    @PostMapping("invite")
+    public GroupInviteDto createGroupInvite(@RequestBody NewGroupInviteDto newGroupInviteDto) {
+        return groupService.createGroupInvite(newGroupInviteDto);
     }
 }
