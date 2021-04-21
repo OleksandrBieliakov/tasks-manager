@@ -9,5 +9,8 @@ import java.util.UUID;
 public class NewAssignmentDto {
 
     @NotNull
+    private Long taskId;
+
+    @NotNull
     private UUID toAppUserId;
 }

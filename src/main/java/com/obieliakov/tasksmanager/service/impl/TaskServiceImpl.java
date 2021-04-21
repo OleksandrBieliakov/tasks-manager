@@ -1,14 +1,15 @@
 package com.obieliakov.tasksmanager.service.impl;
 
-import com.obieliakov.tasksmanager.dto.assignment.AssignmentDto;
-import com.obieliakov.tasksmanager.dto.assignment.NewAssignmentDto;
 import com.obieliakov.tasksmanager.dto.statusupdate.NewStatusUpdateDto;
 import com.obieliakov.tasksmanager.dto.statusupdate.StatusUpdateDto;
 import com.obieliakov.tasksmanager.dto.task.*;
 import com.obieliakov.tasksmanager.mapper.AssigmentMapper;
 import com.obieliakov.tasksmanager.mapper.StatusUpdateMapper;
 import com.obieliakov.tasksmanager.mapper.TaskMapper;
-import com.obieliakov.tasksmanager.model.*;
+import com.obieliakov.tasksmanager.model.AppUser;
+import com.obieliakov.tasksmanager.model.Group;
+import com.obieliakov.tasksmanager.model.StatusUpdate;
+import com.obieliakov.tasksmanager.model.Task;
 import com.obieliakov.tasksmanager.repository.AssignmentRepository;
 import com.obieliakov.tasksmanager.repository.StatusUpdateRepository;
 import com.obieliakov.tasksmanager.repository.TaskRepository;
@@ -184,34 +185,6 @@ public class TaskServiceImpl implements TaskService {
         Task task = taskModelById(id);
         groupMembershipService.verifyCurrentUserMembership(task.getGroup().getId());
         return taskMapper.taskToTaskAssignmentsDto(task);
-    }
-
-    @Override
-    public AssignmentDto createAssignment(Long id, NewAssignmentDto newAssignmentDto) {
-        Set<ConstraintViolation<NewAssignmentDto>> violations = validator.validate(newAssignmentDto);
-        if (!violations.isEmpty()) {
-            throw new ConstraintViolationException(violations);
-        }
-
-        UUID currentAppUserId = identityService.currentUserID();
-        UUID toAppUserId = newAssignmentDto.getToAppUserId();
-        Task task = taskModelById(id);
-
-        groupMembershipService.verifyMembership(currentAppUserId, task.getGroup().getId());
-        groupMembershipService.verifyMembership(toAppUserId, task.getGroup().getId());
-
-        Optional<Assignment> optionalAssignment = assignmentRepository.queryByTaskIdAndAssignedToAppUserId(id, toAppUserId);
-        if(optionalAssignment.isPresent()) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Task is already assigned to user");
-        }
-
-        Assignment newAssignment = new Assignment();
-        newAssignment.setTask(task);
-        newAssignment.setAssignedBy(appUserService.appUserModelById(currentAppUserId));
-        newAssignment.setAssignedTo(appUserService.appUserModelById(toAppUserId));
-
-        Assignment createdAssignment = assignmentRepository.save(newAssignment);
-        return assigmentMapper.assignmentToAssignmentDto(createdAssignment);
     }
 
     @Override

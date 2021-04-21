@@ -1,7 +1,5 @@
 package com.obieliakov.tasksmanager.service;
 
-import com.obieliakov.tasksmanager.dto.assignment.AssignmentDto;
-import com.obieliakov.tasksmanager.dto.assignment.NewAssignmentDto;
 import com.obieliakov.tasksmanager.dto.statusupdate.NewStatusUpdateDto;
 import com.obieliakov.tasksmanager.dto.statusupdate.StatusUpdateDto;
 import com.obieliakov.tasksmanager.dto.task.*;
@@ -26,8 +24,6 @@ public interface TaskService {
     TaskStatusUpdatesDto taskStatusUpdates(Long id);
 
     TaskAssignmentsDto taskAssignments(Long id);
-
-    AssignmentDto createAssignment(Long id, NewAssignmentDto newAssignmentDto);
 
     List<TaskShortInfoDto> allTasks();
 }
