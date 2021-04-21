@@ -26,4 +26,9 @@ public class AssignmentController {
     public AssignmentDto createAssignment(@RequestBody NewAssignmentDto newAssignmentDto) {
         return assignmentService.createAssignment(newAssignmentDto);
     }
+
+    @DeleteMapping("{id}")
+    public void deleteAssignment(@PathVariable Long id) {
+        assignmentService.deleteAssignment(id);
+    }
 }

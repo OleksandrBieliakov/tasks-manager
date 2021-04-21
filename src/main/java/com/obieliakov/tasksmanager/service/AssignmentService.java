@@ -11,4 +11,6 @@ public interface AssignmentService {
     AssignmentDto assignmentById(Long id);
 
     AssignmentDto createAssignment(NewAssignmentDto newAssignmentDto);
+
+    void deleteAssignment(Long id);
 }

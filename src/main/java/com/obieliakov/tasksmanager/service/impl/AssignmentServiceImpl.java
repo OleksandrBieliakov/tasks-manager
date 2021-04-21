@@ -92,4 +92,11 @@ public class AssignmentServiceImpl implements AssignmentService {
         Assignment createdAssignment = assignmentRepository.save(newAssignment);
         return assigmentMapper.assignmentToAssignmentDto(createdAssignment);
     }
+
+    @Override
+    public void deleteAssignment(Long id) {
+        Assignment assignment = assignmentModelById(id);
+        groupMembershipService.verifyCurrentUserMembership(assignment.getTask().getGroup().getId());
+        assignmentRepository.delete(assignment);
+    }
 }
