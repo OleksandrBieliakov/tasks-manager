@@ -20,13 +20,18 @@ public class TaskController {
         this.taskService = taskService;
     }
 
+    @GetMapping("{id}")
+    public TaskDto taskInfo(@PathVariable Long id) {
+        return taskService.taskById(id);
+    }
+
     @PostMapping
-    public NewTaskCreatedDto createTask(@RequestBody NewTaskDto newTaskDto) {
+    public TaskDto createTask(@RequestBody NewTaskDto newTaskDto) {
         return taskService.createTask(newTaskDto);
     }
 
     @PatchMapping("{id}")
-    public TaskUpdatedDto updateTaskInfo(@PathVariable Long id, @RequestBody UpdateTaskInfoDto updateTaskInfoDto) {
+    public TaskDto updateTaskInfo(@PathVariable Long id, @RequestBody UpdateTaskInfoDto updateTaskInfoDto) {
         return taskService.updateTaskInfo(id, updateTaskInfoDto);
     }
 
@@ -36,7 +41,7 @@ public class TaskController {
     }
 
     @GetMapping("{id}/status-update")
-    public TaskStatusUpdatesDto updateTaskStatus(@PathVariable Long id) {
+    public TaskStatusUpdatesDto taskStatusUpdates(@PathVariable Long id) {
         return taskService.taskStatusUpdates(id);
     }
 

@@ -73,7 +73,14 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public NewTaskCreatedDto createTask(NewTaskDto newTaskDto) {
+    public TaskDto taskById(Long id) {
+        Task task = taskModelById(id);
+        groupMembershipService.verifyCurrentUserMembership(task.getGroup().getId());
+        return taskMapper.taskToTaskDto(task);
+    }
+
+    @Override
+    public TaskDto createTask(NewTaskDto newTaskDto) {
         newTaskDto.trim();
 
         Set<ConstraintViolation<NewTaskDto>> violations = validator.validate(newTaskDto);
@@ -94,11 +101,11 @@ public class TaskServiceImpl implements TaskService {
         newTask.setGroup(group);
 
         Task createdTask = taskRepository.save(newTask);
-        return taskMapper.taskToNewTaskCreatedDto(createdTask);
+        return taskMapper.taskToTaskDto(createdTask);
     }
 
     @Override
-    public TaskUpdatedDto updateTaskInfo(Long id, UpdateTaskInfoDto updateTaskInfoDto) {
+    public TaskDto updateTaskInfo(Long id, UpdateTaskInfoDto updateTaskInfoDto) {
         updateTaskInfoDto.trim();
 
         Set<ConstraintViolation<UpdateTaskInfoDto>> violations = validator.validate(updateTaskInfoDto);
@@ -113,7 +120,7 @@ public class TaskServiceImpl implements TaskService {
         existingTask = taskMapper.copyUpdateTaskInfoDtoToTask(updateTaskInfoDto, existingTask);
 
         Task updatedTask = taskRepository.save(existingTask);
-        return taskMapper.taskToTaskUpdatedDto(updatedTask);
+        return taskMapper.taskToTaskDto(updatedTask);
     }
 
     @Override

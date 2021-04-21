@@ -14,19 +14,17 @@ import java.util.List;
         injectionStrategy = InjectionStrategy.CONSTRUCTOR)
 public interface TaskMapper {
 
+    TaskDto taskToTaskDto(Task task);
+
     TaskAssignedToDto taskToTaskAssignedToDto(Task task);
 
     List<TaskAssignedToDto> taskListToTaskAssignedToDtoList(List<Task> tasks);
 
     Task newTaskDtoToTask (NewTaskDto newTaskDto);
 
-    NewTaskCreatedDto taskToNewTaskCreatedDto(Task task);
-
     TaskShortInfoDto taskToTaskShortInfoDto(Task task);
 
     List<TaskShortInfoDto> taskListToTaskShortInfoDtoList(List<Task> tasks);
-
-    TaskUpdatedDto taskToTaskUpdatedDto(Task task);
 
     Task copyUpdateTaskInfoDtoToTask(UpdateTaskInfoDto updateTaskInfoDto, @MappingTarget Task task);
 
