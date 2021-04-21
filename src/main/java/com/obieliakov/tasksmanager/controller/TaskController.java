@@ -1,5 +1,7 @@
 package com.obieliakov.tasksmanager.controller;
 
+import com.obieliakov.tasksmanager.dto.assignment.AssignmentDto;
+import com.obieliakov.tasksmanager.dto.assignment.NewAssignmentDto;
 import com.obieliakov.tasksmanager.dto.statusupdate.NewStatusUpdateDto;
 import com.obieliakov.tasksmanager.dto.statusupdate.StatusUpdateDto;
 import com.obieliakov.tasksmanager.dto.task.*;
@@ -41,5 +43,15 @@ public class TaskController {
     @DeleteMapping("{id}")
     public void deleteTask(@PathVariable Long id) {
         taskService.deleteTask(id);
+    }
+
+    @GetMapping("{id}/assignments")
+    public TaskAssignmentsDto taskAssignments(@PathVariable Long id) {
+        return taskService.taskAssignments(id);
+    }
+
+    @PostMapping("{id}/assignments")
+    public AssignmentDto createAssignment(@PathVariable Long id, @RequestBody NewAssignmentDto newAssignmentDto) {
+        return taskService.createAssignment(id, newAssignmentDto);
     }
 }

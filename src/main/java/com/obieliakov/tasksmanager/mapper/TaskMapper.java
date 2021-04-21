@@ -10,7 +10,7 @@ import org.mapstruct.MappingTarget;
 import java.util.List;
 
 @Mapper(componentModel = "spring",
-        uses = AppUserWithPrivacyMapper.class,
+        uses = {AppUserWithPrivacyMapper.class, AssigmentMapper.class},
         injectionStrategy = InjectionStrategy.CONSTRUCTOR)
 public interface TaskMapper {
 
@@ -32,4 +32,6 @@ public interface TaskMapper {
 
     @Mapping(target = "statusUpdates", ignore = true)
     TaskStatusUpdatesDto taskToTaskStatusUpdatesDto(Task task);
+
+    TaskAssignmentsDto taskToTaskAssignmentsDto(Task task);
 }
