@@ -2,6 +2,7 @@ package com.obieliakov.tasksmanager.controller;
 
 import com.obieliakov.tasksmanager.dto.comment.CommentDto;
 import com.obieliakov.tasksmanager.dto.comment.NewCommentDto;
+import com.obieliakov.tasksmanager.dto.comment.UpdateCommentDto;
 import com.obieliakov.tasksmanager.service.CommentService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.web.bind.annotation.*;
@@ -25,5 +26,10 @@ public class CommentController {
     @PostMapping
     public CommentDto createComment(@RequestBody NewCommentDto newCommentDto) {
         return commentService.createComment(newCommentDto);
+    }
+
+    @PatchMapping("{id}")
+    public CommentDto updateComment(@PathVariable Long id, @RequestBody UpdateCommentDto updateCommentDto) {
+        return commentService.updateComment(id, updateCommentDto);
     }
 }

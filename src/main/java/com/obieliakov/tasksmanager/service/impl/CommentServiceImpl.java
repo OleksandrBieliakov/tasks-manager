@@ -4,6 +4,7 @@ import com.obieliakov.tasksmanager.dto.comment.CommentDto;
 import com.obieliakov.tasksmanager.dto.comment.NewCommentDto;
 import com.obieliakov.tasksmanager.dto.comment.UpdateCommentDto;
 import com.obieliakov.tasksmanager.mapper.CommentMapper;
+import com.obieliakov.tasksmanager.model.AppUser;
 import com.obieliakov.tasksmanager.model.Comment;
 import com.obieliakov.tasksmanager.model.Task;
 import com.obieliakov.tasksmanager.repository.CommentRepository;
@@ -50,6 +51,19 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
+    public boolean isCommentAddedByAppUser(Comment comment, AppUser appUser) {
+        return comment.getAddedBy().getId().equals(appUser.getId());
+    }
+
+    @Override
+    public void verifyCommentAddedByAppUser(Comment comment, UUID appUserId) {
+        AppUser appUser = appUserService.appUserModelById(appUserId);
+        if(!isCommentAddedByAppUser(comment, appUser)) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Comment added by another user");
+        }
+    }
+
+    @Override
     public Comment commentModelById(Long id) {
         Optional<Comment> comment = commentRepository.findById(id);
         if (comment.isEmpty()) {
@@ -89,8 +103,19 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public CommentDto updateComment(UpdateCommentDto updateCommentDto) {
-        return null;
+    public CommentDto updateComment(Long id, UpdateCommentDto updateCommentDto) {
+        Comment comment = commentModelById(id);
+
+        UUID currentAppUserID = identityService.currentUserID();
+
+        groupMembershipService.verifyMembership(currentAppUserID, comment.getTask().getGroup().getId());
+
+        verifyCommentAddedByAppUser(comment, currentAppUserID);
+
+        comment.setMessage(updateCommentDto.getMessage());
+
+        Comment updatedComment = commentRepository.save(comment);
+        return commentMapper.commentToCommentDto(updatedComment);
     }
 
     @Override
