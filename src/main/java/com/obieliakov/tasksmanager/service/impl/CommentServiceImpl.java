@@ -5,6 +5,7 @@ import com.obieliakov.tasksmanager.dto.comment.NewCommentDto;
 import com.obieliakov.tasksmanager.dto.comment.UpdateCommentDto;
 import com.obieliakov.tasksmanager.mapper.CommentMapper;
 import com.obieliakov.tasksmanager.model.Comment;
+import com.obieliakov.tasksmanager.model.Task;
 import com.obieliakov.tasksmanager.repository.CommentRepository;
 import com.obieliakov.tasksmanager.service.*;
 import org.slf4j.Logger;
@@ -14,8 +15,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
 import javax.validation.Validator;
 import java.util.Optional;
+import java.util.Set;
+import java.util.UUID;
 
 @Service
 @Transactional
@@ -62,7 +67,25 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public CommentDto createComment(NewCommentDto newCommentDto) {
-        return null;
+        newCommentDto.trim();
+
+        Set<ConstraintViolation<NewCommentDto>> violations = validator.validate(newCommentDto);
+        if (!violations.isEmpty()) {
+            throw new ConstraintViolationException(violations);
+        }
+
+        UUID currentAppUserID = identityService.currentUserID();
+        Task task = taskService.taskModelById(newCommentDto.getTaskId());
+
+        groupMembershipService.verifyMembership(currentAppUserID, task.getGroup().getId());
+
+        Comment newComment = new Comment();
+        newComment.setMessage(newCommentDto.getMessage());
+        newComment.setTask(task);
+        newComment.setAddedBy(appUserService.appUserModelById(currentAppUserID));
+
+        Comment createdComment = commentRepository.save(newComment);
+        return commentMapper.commentToCommentDto(createdComment);
     }
 
     @Override
