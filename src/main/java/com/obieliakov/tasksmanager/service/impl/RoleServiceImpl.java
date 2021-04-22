@@ -6,7 +6,6 @@ import com.obieliakov.tasksmanager.dto.role.RoleDto;
 import com.obieliakov.tasksmanager.mapper.RoleMapper;
 import com.obieliakov.tasksmanager.model.Group;
 import com.obieliakov.tasksmanager.model.Role;
-import com.obieliakov.tasksmanager.repository.GroupMembershipRepository;
 import com.obieliakov.tasksmanager.repository.RoleRepository;
 import com.obieliakov.tasksmanager.service.*;
 import org.slf4j.Logger;
@@ -34,18 +33,16 @@ public class RoleServiceImpl implements RoleService {
     private final RoleMapper roleMapper;
 
     private final RoleRepository roleRepository;
-    private final GroupMembershipRepository groupMembershipRepository;
 
     private final IdentityService identityService;
     private final GroupMembershipService groupMembershipService;
     private final AppUserService appUserService;
     private final GroupService groupService;
 
-    public RoleServiceImpl(Validator validator, RoleMapper roleMapper, RoleRepository roleRepository, GroupMembershipRepository groupMembershipRepository, IdentityService identityService, GroupMembershipService groupMembershipService, AppUserService appUserService, GroupService groupService) {
+    public RoleServiceImpl(Validator validator, RoleMapper roleMapper, RoleRepository roleRepository, IdentityService identityService, GroupMembershipService groupMembershipService, AppUserService appUserService, GroupService groupService) {
         this.validator = validator;
         this.roleMapper = roleMapper;
         this.roleRepository = roleRepository;
-        this.groupMembershipRepository = groupMembershipRepository;
         this.identityService = identityService;
         this.groupMembershipService = groupMembershipService;
         this.appUserService = appUserService;
@@ -104,7 +101,7 @@ public class RoleServiceImpl implements RoleService {
         Group group = role.getGroup();
         groupMembershipService.verifyCurrentUserMembership(group.getId());
 
-        if(groupMembershipRepository.queryNumberOfAppUsersWithRole(role) > 0) {
+        if(roleRepository.queryNumberOfAppUsersWithRole(role) > 0) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Role is assigned");
         }
 

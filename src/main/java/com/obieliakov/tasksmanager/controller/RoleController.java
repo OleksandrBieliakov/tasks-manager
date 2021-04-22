@@ -1,10 +1,13 @@
 package com.obieliakov.tasksmanager.controller;
 
 import com.obieliakov.tasksmanager.dto.role.NewRoleDto;
+import com.obieliakov.tasksmanager.dto.role.RoleAssignmentDto;
 import com.obieliakov.tasksmanager.dto.role.RoleDto;
 import com.obieliakov.tasksmanager.service.RoleService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.UUID;
 
 @RestController
 @RequestMapping(value = "api/roles")
@@ -30,5 +33,15 @@ public class RoleController {
     @DeleteMapping("{id}")
     public void deleteRole(@PathVariable Long id) {
         roleService.deleteRole(id);
+    }
+
+    @PatchMapping("{id}/assign/{appUserId}")
+    public RoleAssignmentDto assignRole(@PathVariable Long id, @PathVariable UUID appUserId) {
+        return roleService.assignRole(id, appUserId);
+    }
+
+    @PatchMapping("{id}/unassign/{appUserId}")
+    public void unassignRole(@PathVariable Long id, @PathVariable UUID appUserId) {
+        roleService.unassignRole(id, appUserId);
     }
 }

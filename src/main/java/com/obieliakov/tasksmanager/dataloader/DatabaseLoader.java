@@ -13,6 +13,7 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -126,9 +127,9 @@ public class DatabaseLoader implements CommandLineRunner {
         roleRepository.save(group1Role3);
 
 
-        GroupMembership group1AppUser1 = groupMembershipFactory.generateAndInit(group1, appUser1, group1Role1);
-        GroupMembership group1AppUser2 = groupMembershipFactory.generateAndInit(group1, appUser2, group1Role1);
-        GroupMembership group1AppUser3 = groupMembershipFactory.generateAndInit(group1, appUser3, group1Role2);
+        GroupMembership group1AppUser1 = groupMembershipFactory.generateAndInit(group1, appUser1, List.of(group1Role1));
+        GroupMembership group1AppUser2 = groupMembershipFactory.generateAndInit(group1, appUser2, List.of(group1Role1, group1Role2));
+        GroupMembership group1AppUser3 = groupMembershipFactory.generateAndInit(group1, appUser3, List.of(group1Role2));
         GroupMembership group1AppUser4 = groupMembershipFactory.generateAndInit(group1, appUser4);
 
         GroupMembership group2AppUser3 = groupMembershipFactory.generateAndInit(group2, appUser3);

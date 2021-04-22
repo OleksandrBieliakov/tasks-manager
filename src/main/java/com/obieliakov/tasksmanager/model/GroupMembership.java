@@ -5,6 +5,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.ZonedDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "group_membership",
@@ -39,7 +40,13 @@ public class GroupMembership {
     @JoinColumn(name = "app_user_id", foreignKey = @ForeignKey(name = "fk_membership_user"))
     private AppUser appUser;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    /*@ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "role_id", foreignKey = @ForeignKey(name = "fk_membership_role"))
-    private Role role;
+    private Role role;*/
+
+    @ManyToMany
+    @JoinTable(name = "group_membership_roles",
+            joinColumns = {@JoinColumn(name = "group_membership_id", foreignKey = @ForeignKey(name = "fk_group_membership_role"))},
+            inverseJoinColumns = {@JoinColumn(name = "role_id", foreignKey = @ForeignKey(name = "fk_role_group_membership"))})
+    private List<Role> roles;
 }

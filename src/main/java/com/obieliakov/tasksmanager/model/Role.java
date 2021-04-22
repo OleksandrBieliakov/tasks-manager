@@ -30,6 +30,9 @@ public class Role {
     @JoinColumn(name = "group_id", foreignKey = @ForeignKey(name = "fk_role_group"))
     private Group group;
 
-    @OneToMany(mappedBy = "role")
+    /*@OneToMany(mappedBy = "role")
+    private List<GroupMembership> groupMemberships;*/
+
+    @ManyToMany(mappedBy = "roles")
     private List<GroupMembership> groupMemberships;
 }
