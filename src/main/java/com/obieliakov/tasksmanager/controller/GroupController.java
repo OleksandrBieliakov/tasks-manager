@@ -1,9 +1,6 @@
 package com.obieliakov.tasksmanager.controller;
 
-import com.obieliakov.tasksmanager.dto.group.GroupInfoDto;
-import com.obieliakov.tasksmanager.dto.group.GroupMembersDto;
-import com.obieliakov.tasksmanager.dto.group.GroupTasksDto;
-import com.obieliakov.tasksmanager.dto.group.NewOrUpdateGroupDto;
+import com.obieliakov.tasksmanager.dto.group.*;
 import com.obieliakov.tasksmanager.dto.groupinvite.GroupInviteAcceptedDto;
 import com.obieliakov.tasksmanager.dto.groupinvite.GroupInviteDto;
 import com.obieliakov.tasksmanager.dto.groupinvite.NewGroupInviteDto;
@@ -65,5 +62,10 @@ public class GroupController {
     @PatchMapping("{id}/leave")
     public void leaveGroup(@PathVariable Long id) {
         groupService.leaveGroup(id);
+    }
+
+    @GetMapping("{id}/roles")
+    public GroupRolesDto groupRoles(@PathVariable Long id) {
+        return groupService.groupRoles(id);
     }
 }

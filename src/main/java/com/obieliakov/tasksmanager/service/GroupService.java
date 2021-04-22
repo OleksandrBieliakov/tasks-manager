@@ -33,6 +33,8 @@ public interface GroupService {
 
     void leaveGroup(Long id);
 
+    GroupRolesDto groupRoles(Long id);
+
     List<GroupInfoDto> allGroups();
 
     GroupMembersShortDto groupMembersShortById(Long id);

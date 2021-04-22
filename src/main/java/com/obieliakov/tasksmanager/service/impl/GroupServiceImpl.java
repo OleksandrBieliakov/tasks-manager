@@ -283,6 +283,12 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
+    public GroupRolesDto groupRoles(Long id) {
+        groupMembershipService.verifyCurrentUserMembership(id);
+        return groupMapper.groupToGroupRolesDto(groupModelById(id));
+    }
+
+    @Override
     public List<GroupInfoDto> allGroups() {
         List<Group> groups = groupRepository.findAll();
         return groupMapper.groupListToGroupInfoDtoList(groups);
