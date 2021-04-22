@@ -3,7 +3,6 @@ package com.obieliakov.tasksmanager.service;
 import com.obieliakov.tasksmanager.dto.role.NewRoleDto;
 import com.obieliakov.tasksmanager.dto.role.RoleAssignmentDto;
 import com.obieliakov.tasksmanager.dto.role.RoleDto;
-import com.obieliakov.tasksmanager.dto.role.UpdateRoleDto;
 import com.obieliakov.tasksmanager.model.Role;
 
 import java.util.UUID;
@@ -15,8 +14,6 @@ public interface RoleService {
     RoleDto roleById(Long id);
 
     RoleDto createRole(NewRoleDto newRoleDto);
-
-    RoleDto updateRole(Long id, UpdateRoleDto updateRoleDto);
 
     void deleteRole(Long id);
 

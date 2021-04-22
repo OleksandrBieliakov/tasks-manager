@@ -15,4 +15,10 @@ public class NewRoleDto {
 
     @NotNull
     private Long groupId;
+
+    public void trim() {
+        if (title != null) {
+            title = title.trim();
+        }
+    }
 }

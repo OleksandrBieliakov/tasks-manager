@@ -4,6 +4,7 @@ import com.obieliakov.tasksmanager.dto.appUser.AppUserShortDto;
 import com.obieliakov.tasksmanager.model.AppUser;
 import com.obieliakov.tasksmanager.model.Group;
 import com.obieliakov.tasksmanager.model.GroupMembership;
+import com.obieliakov.tasksmanager.model.Role;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -29,4 +30,7 @@ public interface GroupMembershipRepository extends JpaRepository<GroupMembership
 
     @Query("select gm.group from GroupMembership gm where gm.appUser.id = :app_user_id and gm.active=true")
     List<Group> queryGroupsWithAppUserActiveMembership(@Param("app_user_id") UUID appUserId);
+
+    @Query("select count(gm) from GroupMembership gm where gm.role = :role")
+    Long queryNumberOfAppUsersWithRole(@Param("role") Role role);
 }
