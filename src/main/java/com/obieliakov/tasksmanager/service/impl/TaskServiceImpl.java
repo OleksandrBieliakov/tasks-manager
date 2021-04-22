@@ -188,6 +188,13 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
+    public TaskCommentsDto taskComments(Long id) {
+        Task task = taskModelById(id);
+        groupMembershipService.verifyCurrentUserMembership(task.getGroup().getId());
+        return taskMapper.taskToTaskCommentsDto(task);
+    }
+
+    @Override
     public List<TaskShortInfoDto> allTasks() {
         List<Task> taskList = taskRepository.findAll();
         return taskMapper.taskListToTaskShortInfoDtoList(taskList);

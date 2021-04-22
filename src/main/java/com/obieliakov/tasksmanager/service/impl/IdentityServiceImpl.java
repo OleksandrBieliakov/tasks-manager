@@ -31,7 +31,6 @@ public class IdentityServiceImpl implements IdentityService {
                 user.setEmail(token.getEmail());
                 user.setFirstName(token.getGivenName());
                 user.setLastName(token.getFamilyName());
-                //TODO set timeRegistered
                 return user;
             } else {
                 log.warn("Cannot get user data from principal");

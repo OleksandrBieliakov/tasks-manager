@@ -25,5 +25,7 @@ public interface TaskService {
 
     TaskAssignmentsDto taskAssignments(Long id);
 
+    TaskCommentsDto taskComments(Long id);
+
     List<TaskShortInfoDto> allTasks();
 }

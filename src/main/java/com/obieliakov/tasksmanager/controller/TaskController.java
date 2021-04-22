@@ -52,4 +52,9 @@ public class TaskController {
     public TaskAssignmentsDto taskAssignments(@PathVariable Long id) {
         return taskService.taskAssignments(id);
     }
+
+    @GetMapping("{id}/comments")
+    public TaskCommentsDto taskComments(@PathVariable Long id) {
+        return taskService.taskComments(id);
+    }
 }
