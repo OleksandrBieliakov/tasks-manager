@@ -120,6 +120,14 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public void deleteComment(Long id) {
+        Comment comment = commentModelById(id);
 
+        UUID currentAppUserID = identityService.currentUserID();
+
+        groupMembershipService.verifyMembership(currentAppUserID, comment.getTask().getGroup().getId());
+
+        verifyCommentAddedByAppUser(comment, currentAppUserID);
+
+        commentRepository.delete(comment);
     }
 }
