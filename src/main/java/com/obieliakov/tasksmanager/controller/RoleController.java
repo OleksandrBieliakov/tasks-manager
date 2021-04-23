@@ -7,8 +7,6 @@ import com.obieliakov.tasksmanager.service.RoleService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.UUID;
-
 @RestController
 @RequestMapping(value = "api/roles")
 @SecurityRequirement(name = "identity")
@@ -35,13 +33,13 @@ public class RoleController {
         roleService.deleteRole(id);
     }
 
-    @PatchMapping("{id}/assign/{appUserId}")
-    public RoleAssignmentDto assignRole(@PathVariable Long id, @PathVariable UUID appUserId) {
-        return roleService.assignRole(id, appUserId);
+    @PatchMapping("{id}/assign")
+    public RoleAssignmentDto assignRole(@PathVariable Long id) {
+        return roleService.assignRole(id);
     }
 
-    @PatchMapping("{id}/unassign/{appUserId}")
-    public void unassignRole(@PathVariable Long id, @PathVariable UUID appUserId) {
-        roleService.unassignRole(id, appUserId);
+    @PatchMapping("{id}/unassign")
+    public void unassignRole(@PathVariable Long id) {
+        roleService.unassignRole(id);
     }
 }

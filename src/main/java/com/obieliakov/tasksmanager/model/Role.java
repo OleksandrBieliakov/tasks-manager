@@ -5,7 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "role",
@@ -34,5 +34,5 @@ public class Role {
     private List<GroupMembership> groupMemberships;*/
 
     @ManyToMany(mappedBy = "roles")
-    private List<GroupMembership> groupMemberships;
+    private Set<GroupMembership> groupMemberships;
 }

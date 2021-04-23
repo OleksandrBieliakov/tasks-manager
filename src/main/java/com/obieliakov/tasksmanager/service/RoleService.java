@@ -5,8 +5,6 @@ import com.obieliakov.tasksmanager.dto.role.RoleAssignmentDto;
 import com.obieliakov.tasksmanager.dto.role.RoleDto;
 import com.obieliakov.tasksmanager.model.Role;
 
-import java.util.UUID;
-
 public interface RoleService {
 
     Role roleModelById(Long id);
@@ -17,7 +15,7 @@ public interface RoleService {
 
     void deleteRole(Long id);
 
-    RoleAssignmentDto assignRole(Long id, UUID appUserId);
+    RoleAssignmentDto assignRole(Long id);
 
-    void unassignRole(Long id, UUID appUserId);
+    void unassignRole(Long id);
 }

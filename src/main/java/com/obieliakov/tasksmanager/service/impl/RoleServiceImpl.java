@@ -5,9 +5,14 @@ import com.obieliakov.tasksmanager.dto.role.RoleAssignmentDto;
 import com.obieliakov.tasksmanager.dto.role.RoleDto;
 import com.obieliakov.tasksmanager.mapper.RoleMapper;
 import com.obieliakov.tasksmanager.model.Group;
+import com.obieliakov.tasksmanager.model.GroupMembership;
 import com.obieliakov.tasksmanager.model.Role;
+import com.obieliakov.tasksmanager.repository.GroupMembershipRepository;
 import com.obieliakov.tasksmanager.repository.RoleRepository;
-import com.obieliakov.tasksmanager.service.*;
+import com.obieliakov.tasksmanager.service.GroupMembershipService;
+import com.obieliakov.tasksmanager.service.GroupService;
+import com.obieliakov.tasksmanager.service.IdentityService;
+import com.obieliakov.tasksmanager.service.RoleService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -33,19 +38,19 @@ public class RoleServiceImpl implements RoleService {
     private final RoleMapper roleMapper;
 
     private final RoleRepository roleRepository;
+    private final GroupMembershipRepository groupMembershipRepository;
 
     private final IdentityService identityService;
     private final GroupMembershipService groupMembershipService;
-    private final AppUserService appUserService;
     private final GroupService groupService;
 
-    public RoleServiceImpl(Validator validator, RoleMapper roleMapper, RoleRepository roleRepository, IdentityService identityService, GroupMembershipService groupMembershipService, AppUserService appUserService, GroupService groupService) {
+    public RoleServiceImpl(Validator validator, RoleMapper roleMapper, RoleRepository roleRepository, GroupMembershipRepository groupMembershipRepository, IdentityService identityService, GroupMembershipService groupMembershipService, GroupService groupService) {
         this.validator = validator;
         this.roleMapper = roleMapper;
         this.roleRepository = roleRepository;
+        this.groupMembershipRepository = groupMembershipRepository;
         this.identityService = identityService;
         this.groupMembershipService = groupMembershipService;
-        this.appUserService = appUserService;
         this.groupService = groupService;
     }
 
@@ -109,12 +114,41 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public RoleAssignmentDto assignRole(Long id, UUID appUserId) {
-        return null;
+    public RoleAssignmentDto assignRole(Long id) {
+        Role role = roleModelById(id);
+        UUID currentAppUserId = identityService.currentUserID();
+
+        GroupMembership groupMembership = groupMembershipService.groupMembershipModel(currentAppUserId, role.getGroup().getId());
+
+        Set<Role> groupMembershipRoles = groupMembership.getRoles();
+
+        if(groupMembershipRoles.contains(role)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Role is already assigned to user");
+        }
+
+        groupMembershipRoles.add(role);
+        groupMembershipRepository.save(groupMembership);
+
+        RoleAssignmentDto roleAssignmentDto = new RoleAssignmentDto();
+        roleAssignmentDto.setAppUserId(currentAppUserId);
+        roleAssignmentDto.setRole(roleMapper.roleToRoleShortDto(role));
+        return roleAssignmentDto;
     }
 
     @Override
-    public void unassignRole(Long id, UUID appUserId) {
+    public void unassignRole(Long id) {
+        Role role = roleModelById(id);
+        UUID currentAppUserId = identityService.currentUserID();
 
+        GroupMembership groupMembership = groupMembershipService.groupMembershipModel(currentAppUserId, role.getGroup().getId());
+
+        Set<Role> groupMembershipRoles = groupMembership.getRoles();
+
+        if(!groupMembershipRoles.contains(role)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Role is not assigned to user");
+        }
+
+        groupMembershipRoles.remove(role);
+        groupMembershipRepository.save(groupMembership);
     }
 }

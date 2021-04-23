@@ -6,7 +6,7 @@ import com.obieliakov.tasksmanager.model.GroupMembership;
 import com.obieliakov.tasksmanager.model.Role;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
+import java.util.Set;
 
 @Component
 public class GroupMembershipFactory implements Factory<GroupMembership> {
@@ -23,7 +23,7 @@ public class GroupMembershipFactory implements Factory<GroupMembership> {
         return groupMembership;
     }
 
-    public GroupMembership generateAndInit(Group group, AppUser appUser, List<Role> roles) {
+    public GroupMembership generateAndInit(Group group, AppUser appUser, Set<Role> roles) {
         GroupMembership groupMembership = generate();
         groupMembership.setGroup(group);
         groupMembership.setAppUser(appUser);

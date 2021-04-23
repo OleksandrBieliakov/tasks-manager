@@ -3,14 +3,12 @@ package com.obieliakov.tasksmanager.service.impl;
 import com.obieliakov.tasksmanager.dto.statusupdate.NewStatusUpdateDto;
 import com.obieliakov.tasksmanager.dto.statusupdate.StatusUpdateDto;
 import com.obieliakov.tasksmanager.dto.task.*;
-import com.obieliakov.tasksmanager.mapper.AssigmentMapper;
 import com.obieliakov.tasksmanager.mapper.StatusUpdateMapper;
 import com.obieliakov.tasksmanager.mapper.TaskMapper;
 import com.obieliakov.tasksmanager.model.AppUser;
 import com.obieliakov.tasksmanager.model.Group;
 import com.obieliakov.tasksmanager.model.StatusUpdate;
 import com.obieliakov.tasksmanager.model.Task;
-import com.obieliakov.tasksmanager.repository.AssignmentRepository;
 import com.obieliakov.tasksmanager.repository.StatusUpdateRepository;
 import com.obieliakov.tasksmanager.repository.TaskRepository;
 import com.obieliakov.tasksmanager.service.*;
@@ -39,25 +37,21 @@ public class TaskServiceImpl implements TaskService {
 
     private final TaskMapper taskMapper;
     private final StatusUpdateMapper statusUpdateMapper;
-    private final AssigmentMapper assigmentMapper;
 
     private final TaskRepository taskRepository;
     private final StatusUpdateRepository statusUpdateRepository;
-    private final AssignmentRepository assignmentRepository;
 
     private final IdentityService identityService;
     private final GroupMembershipService groupMembershipService;
     private final AppUserService appUserService;
     private final GroupService groupService;
 
-    public TaskServiceImpl(Validator validator, TaskMapper taskMapper, StatusUpdateMapper statusUpdateMapper, AssigmentMapper assigmentMapper, TaskRepository taskRepository, StatusUpdateRepository statusUpdateRepository, AssignmentRepository assignmentRepository, IdentityService identityService, GroupMembershipService groupMembershipService, AppUserService appUserService, GroupService groupService) {
+    public TaskServiceImpl(Validator validator, TaskMapper taskMapper, StatusUpdateMapper statusUpdateMapper, TaskRepository taskRepository, StatusUpdateRepository statusUpdateRepository, IdentityService identityService, GroupMembershipService groupMembershipService, AppUserService appUserService, GroupService groupService) {
         this.validator = validator;
         this.taskMapper = taskMapper;
         this.statusUpdateMapper = statusUpdateMapper;
-        this.assigmentMapper = assigmentMapper;
         this.taskRepository = taskRepository;
         this.statusUpdateRepository = statusUpdateRepository;
-        this.assignmentRepository = assignmentRepository;
         this.identityService = identityService;
         this.groupMembershipService = groupMembershipService;
         this.appUserService = appUserService;

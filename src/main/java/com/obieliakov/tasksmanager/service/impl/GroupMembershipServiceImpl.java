@@ -1,5 +1,6 @@
 package com.obieliakov.tasksmanager.service.impl;
 
+import com.obieliakov.tasksmanager.model.GroupMembership;
 import com.obieliakov.tasksmanager.repository.GroupMembershipRepository;
 import com.obieliakov.tasksmanager.service.GroupMembershipService;
 import com.obieliakov.tasksmanager.service.IdentityService;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -25,6 +27,15 @@ public class GroupMembershipServiceImpl implements GroupMembershipService {
     public GroupMembershipServiceImpl(GroupMembershipRepository groupMembershipRepository, IdentityService identityService) {
         this.groupMembershipRepository = groupMembershipRepository;
         this.identityService = identityService;
+    }
+
+    @Override
+    public GroupMembership groupMembershipModel(UUID appUserId, Long groupID) {
+        Optional<GroupMembership> groupMembership = groupMembershipRepository.queryByGroupIdAndAppUserIdAndActiveTrue(groupID, appUserId);
+        if (groupMembership.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User is not a member of a group");
+        }
+        return groupMembership.get();
     }
 
     @Override

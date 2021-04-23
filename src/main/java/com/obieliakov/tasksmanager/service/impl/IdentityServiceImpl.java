@@ -68,4 +68,16 @@ public class IdentityServiceImpl implements IdentityService {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Not authorised for access to the user data");
         }
     }
+
+    @Override
+    public boolean unauthorized(UUID currentUserId, UUID checkedUserId) {
+        return !currentUserId.equals(checkedUserId);
+    }
+
+    @Override
+    public void verifyAuthorization(UUID currentUserId, UUID checkedUserId) {
+        if(unauthorized(currentUserId, checkedUserId)) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Not authorised for access to the user data");
+        }
+    }
 }

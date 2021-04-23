@@ -13,4 +13,8 @@ public interface IdentityService {
     boolean unauthorized(UUID checkedUserId);
 
     void verifyAuthorization(UUID checkedUserId);
+
+    boolean unauthorized(UUID currentUserId, UUID checkedUserId);
+
+    void verifyAuthorization(UUID currentUserId, UUID checkedUserId);
 }
