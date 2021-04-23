@@ -27,4 +27,6 @@ public interface GroupMapper {
     GroupTasksDto groupToGroupTasksDto(Group group);
 
     GroupRolesDto groupToGroupRolesDto(Group group);
+
+    GroupMembersRolesDto groupToGroupMembersRolesDto(Group group);
 }

@@ -68,4 +68,9 @@ public class GroupController {
     public GroupRolesDto groupRoles(@PathVariable Long id) {
         return groupService.groupRoles(id);
     }
+
+    @GetMapping("{id}/members-roles")
+    public GroupMembersRolesDto groupMembersRoles(@PathVariable Long id) {
+        return groupService.groupMembersRolesById(id);
+    }
 }

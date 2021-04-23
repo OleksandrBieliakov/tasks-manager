@@ -35,6 +35,8 @@ public interface GroupService {
 
     GroupRolesDto groupRoles(Long id);
 
+    GroupMembersRolesDto groupMembersRolesById(Long id);
+
     List<GroupInfoDto> allGroups();
 
     GroupMembersShortDto groupMembersShortById(Long id);
