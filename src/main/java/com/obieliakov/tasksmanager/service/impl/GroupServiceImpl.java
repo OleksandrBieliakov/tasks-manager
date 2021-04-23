@@ -300,7 +300,7 @@ public class GroupServiceImpl implements GroupService {
         List<AppUserRolesDto> appUserRolesDtoList = groupMembershipRepository.findByGroup(group).stream()
                 .map(groupMembership -> {
                     AppUserRolesDto appUserRolesDto = new AppUserRolesDto();
-                    appUserRolesDto.setAppUserId(groupMembership.getAppUser().getId());
+                    appUserRolesDto.setAppUser(appUserWithPrivacyMapper.appUserToAppUserDtoWithPrivacy(groupMembership.getAppUser()));
                     appUserRolesDto.setRoles(roleMapper.roleListToRoleShortDtoList(groupMembership.getRoles()));
                     return appUserRolesDto;
         }).collect(Collectors.toList());

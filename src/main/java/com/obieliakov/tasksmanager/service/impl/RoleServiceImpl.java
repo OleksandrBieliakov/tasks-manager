@@ -3,6 +3,7 @@ package com.obieliakov.tasksmanager.service.impl;
 import com.obieliakov.tasksmanager.dto.role.NewRoleDto;
 import com.obieliakov.tasksmanager.dto.role.RoleAssignmentDto;
 import com.obieliakov.tasksmanager.dto.role.RoleDto;
+import com.obieliakov.tasksmanager.mapper.AppUserWithPrivacyMapper;
 import com.obieliakov.tasksmanager.mapper.RoleMapper;
 import com.obieliakov.tasksmanager.model.Group;
 import com.obieliakov.tasksmanager.model.GroupMembership;
@@ -36,6 +37,7 @@ public class RoleServiceImpl implements RoleService {
     private final Validator validator;
 
     private final RoleMapper roleMapper;
+    private final AppUserWithPrivacyMapper appUserWithPrivacyMapper;
 
     private final RoleRepository roleRepository;
     private final GroupMembershipRepository groupMembershipRepository;
@@ -44,9 +46,10 @@ public class RoleServiceImpl implements RoleService {
     private final GroupMembershipService groupMembershipService;
     private final GroupService groupService;
 
-    public RoleServiceImpl(Validator validator, RoleMapper roleMapper, RoleRepository roleRepository, GroupMembershipRepository groupMembershipRepository, IdentityService identityService, GroupMembershipService groupMembershipService, GroupService groupService) {
+    public RoleServiceImpl(Validator validator, RoleMapper roleMapper, AppUserWithPrivacyMapper appUserWithPrivacyMapper, RoleRepository roleRepository, GroupMembershipRepository groupMembershipRepository, IdentityService identityService, GroupMembershipService groupMembershipService, GroupService groupService) {
         this.validator = validator;
         this.roleMapper = roleMapper;
+        this.appUserWithPrivacyMapper = appUserWithPrivacyMapper;
         this.roleRepository = roleRepository;
         this.groupMembershipRepository = groupMembershipRepository;
         this.identityService = identityService;
@@ -130,7 +133,7 @@ public class RoleServiceImpl implements RoleService {
         groupMembershipRepository.save(groupMembership);
 
         RoleAssignmentDto roleAssignmentDto = new RoleAssignmentDto();
-        roleAssignmentDto.setAppUserId(currentAppUserId);
+        roleAssignmentDto.setAppUser(appUserWithPrivacyMapper.appUserToAppUserDtoWithPrivacy(groupMembership.getAppUser()));
         roleAssignmentDto.setRole(roleMapper.roleToRoleShortDto(role));
         return roleAssignmentDto;
     }

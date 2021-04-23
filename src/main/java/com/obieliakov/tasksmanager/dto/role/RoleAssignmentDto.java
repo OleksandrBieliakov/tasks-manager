@@ -1,12 +1,11 @@
 package com.obieliakov.tasksmanager.dto.role;
 
+import com.obieliakov.tasksmanager.dto.appUser.AppUserDto;
 import lombok.Data;
-
-import java.util.UUID;
 
 @Data
 public class RoleAssignmentDto {
 
-    private UUID appUserId;
+    private AppUserDto appUser;
     private RoleShortDto role;
 }
