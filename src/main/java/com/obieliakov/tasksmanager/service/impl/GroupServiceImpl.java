@@ -4,6 +4,7 @@ import com.obieliakov.tasksmanager.dto.appUser.AppUserDto;
 import com.obieliakov.tasksmanager.dto.appUser.AppUserRolesDto;
 import com.obieliakov.tasksmanager.dto.appUser.AppUserShortDto;
 import com.obieliakov.tasksmanager.dto.group.*;
+import com.obieliakov.tasksmanager.dto.groupMembership.GroupMembershipDto;
 import com.obieliakov.tasksmanager.dto.groupinvite.GroupInviteAcceptedDto;
 import com.obieliakov.tasksmanager.dto.groupinvite.GroupInviteDto;
 import com.obieliakov.tasksmanager.dto.groupinvite.NewGroupInviteDto;
@@ -48,6 +49,7 @@ public class GroupServiceImpl implements GroupService {
     private final TaskMapper taskMapper;
     private final GroupInviteMapper groupInviteMapper;
     private final RoleMapper roleMapper;
+    private final GroupMembershipMapper groupMembershipMapper;
 
     private final GroupRepository groupRepository;
     private final GroupMembershipRepository groupMembershipRepository;
@@ -57,7 +59,7 @@ public class GroupServiceImpl implements GroupService {
     private final GroupMembershipService groupMembershipService;
     private final AppUserService appUserService;
 
-    public GroupServiceImpl(Validator validator, AppUserMapper appUserMapper, AppUserWithPrivacyMapper appUserWithPrivacyMapper, GroupMapper groupMapper, TaskMapper taskMapper, GroupInviteMapper groupInviteMapper, RoleMapper roleMapper, GroupRepository groupRepository, GroupMembershipRepository groupMembershipRepository, GroupInviteRepository groupInviteRepository, IdentityService identityService, GroupMembershipService groupMembershipService, AppUserService appUserService) {
+    public GroupServiceImpl(Validator validator, AppUserMapper appUserMapper, AppUserWithPrivacyMapper appUserWithPrivacyMapper, GroupMapper groupMapper, TaskMapper taskMapper, GroupInviteMapper groupInviteMapper, RoleMapper roleMapper, GroupMembershipMapper groupMembershipMapper, GroupRepository groupRepository, GroupMembershipRepository groupMembershipRepository, GroupInviteRepository groupInviteRepository, IdentityService identityService, GroupMembershipService groupMembershipService, AppUserService appUserService) {
         this.validator = validator;
         this.appUserMapper = appUserMapper;
         this.appUserWithPrivacyMapper = appUserWithPrivacyMapper;
@@ -65,6 +67,7 @@ public class GroupServiceImpl implements GroupService {
         this.taskMapper = taskMapper;
         this.groupInviteMapper = groupInviteMapper;
         this.roleMapper = roleMapper;
+        this.groupMembershipMapper = groupMembershipMapper;
         this.groupRepository = groupRepository;
         this.groupMembershipRepository = groupMembershipRepository;
         this.groupInviteRepository = groupInviteRepository;
@@ -308,6 +311,13 @@ public class GroupServiceImpl implements GroupService {
         GroupMembersRolesDto groupMembersRolesDto = groupMapper.groupToGroupMembersRolesDto(group);
         groupMembersRolesDto.setMembers(appUserRolesDtoList);
         return groupMembersRolesDto;
+    }
+
+    @Override
+    public GroupMembershipDto groupMember(Long id, UUID appUserId) {
+        groupMembershipService.verifyCurrentUserMembership(id);
+        GroupMembership groupMembership = groupMembershipService.groupMembershipModel(appUserId, id);
+        return groupMembershipMapper.groupMembershipToGroupMembershipDto(groupMembership);
     }
 
     @Override

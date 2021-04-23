@@ -1,12 +1,15 @@
 package com.obieliakov.tasksmanager.controller;
 
 import com.obieliakov.tasksmanager.dto.group.*;
+import com.obieliakov.tasksmanager.dto.groupMembership.GroupMembershipDto;
 import com.obieliakov.tasksmanager.dto.groupinvite.GroupInviteAcceptedDto;
 import com.obieliakov.tasksmanager.dto.groupinvite.GroupInviteDto;
 import com.obieliakov.tasksmanager.dto.groupinvite.NewGroupInviteDto;
 import com.obieliakov.tasksmanager.service.GroupService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.UUID;
 
 @RestController
 @RequestMapping(value = "api/groups")
@@ -37,6 +40,11 @@ public class GroupController {
     @GetMapping("{id}/members")
     public GroupMembersDto groupMembers(@PathVariable Long id) {
         return groupService.groupMembersById(id, false);
+    }
+
+    @GetMapping("{id}/members/{appUserId}")
+    public GroupMembershipDto groupMember(@PathVariable Long id, @PathVariable UUID appUserId) {
+        return groupService.groupMember(id, appUserId);
     }
 
     @GetMapping("{id}/tasks")

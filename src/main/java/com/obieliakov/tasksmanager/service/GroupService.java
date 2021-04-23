@@ -1,6 +1,7 @@
 package com.obieliakov.tasksmanager.service;
 
 import com.obieliakov.tasksmanager.dto.group.*;
+import com.obieliakov.tasksmanager.dto.groupMembership.GroupMembershipDto;
 import com.obieliakov.tasksmanager.dto.groupinvite.GroupInviteAcceptedDto;
 import com.obieliakov.tasksmanager.dto.groupinvite.GroupInviteDto;
 import com.obieliakov.tasksmanager.dto.groupinvite.NewGroupInviteDto;
@@ -8,6 +9,7 @@ import com.obieliakov.tasksmanager.model.Group;
 import com.obieliakov.tasksmanager.model.GroupInvite;
 
 import java.util.List;
+import java.util.UUID;
 
 public interface GroupService {
 
@@ -36,6 +38,8 @@ public interface GroupService {
     GroupRolesDto groupRoles(Long id);
 
     GroupMembersRolesDto groupMembersRolesById(Long id);
+
+    GroupMembershipDto groupMember(Long id, UUID appUserId);
 
     List<GroupInfoDto> allGroups();
 
