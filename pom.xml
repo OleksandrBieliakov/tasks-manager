@@ -94,11 +94,12 @@
 			<scope>test</scope>
 		</dependency>
 
+		<!-- Replacing Tomcat server with Undertow server -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-undertow</artifactId>
 		</dependency>
-
+		<!-- Replacing Tomcat server with Undertow server -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
@@ -118,6 +119,7 @@
 		</dependency>
 
 		<!-- https://mvnrepository.com/artifact/org.glassfish/javax.el -->
+		<!-- Expression Language used with validation. Needed to parse expressions inside the violation messages -->
 		<dependency>
 			<groupId>org.glassfish</groupId>
 			<artifactId>javax.el</artifactId>
@@ -133,6 +135,7 @@
 
 
 		<!-- To use go to: http://localhost:8080/swagger-ui.html -->
+		<!-- swagger without ui-->
 		<dependency>
 			<groupId>org.springdoc</groupId>
 			<artifactId>springdoc-openapi-webmvc-core</artifactId>
@@ -140,6 +143,7 @@
 		</dependency>
 
 		<!-- https://www.baeldung.com/hibernate-second-level-cache -->
+		<!--second level cache -->
 		<dependency>
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-ehcache</artifactId>
@@ -153,7 +157,9 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 				<configuration>
+					<!-- Needed to build executable jar -->
 					<executable>true</executable>
+					<!-- Needed to run debug after starting the app -->
 					<jvmArguments>
 						-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=5005
 					</jvmArguments>
@@ -173,6 +179,7 @@
 				<configuration>
 					<source>${java.version}</source> <!-- depending on your project -->
 					<target>${java.version}</target> <!-- depending on your project -->
+					<!-- Needed to make mapstuct work well with lombok -->
 					<annotationProcessorPaths>
 						<path>
 							<groupId>org.projectlombok</groupId>
@@ -194,6 +201,7 @@
 				</configuration>
 			</plugin>
 
+			<!-- Needed to generate SQL ddl script -->
 			<plugin>
 				<groupId>de.jpdigital</groupId>
 				<artifactId>hibernate54-ddl-maven-plugin</artifactId>
